@@ -1,11 +1,11 @@
 package routers
 
 import (
-	"github.com/tfolkman/budget/controllers"
 	"github.com/astaxie/beego"
+	"github.com/tfolkman/budget/controllers"
 )
 
 func init() {
-    beego.Router("/", &controllers.MainController{})
-    beego.Router("/hello-world", &controllers.MainController{}, "get:HelloSitepoint")
+	beego.Router("/", &controllers.MainController{})
+	beego.Router("/new_budget", &controllers.MainController{}, "get:NewBudget")
 }
