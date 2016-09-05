@@ -7,17 +7,23 @@ require('bootstrap');
 var WelcomeScreen = React.createClass({
 
   getInitialState: function() {
-    return {numChildren: 1, data: [{'n':1}]};
+    return {numChildren: 0, data: {0: {'name': '', 'amount': ''}}};
   },
 
   addChild: function() {
     var newData = this.state.data;
-    newData.push({'n': this.state.numChildren+1})
+    newData[this.state.numChildren+1] = {'name': '', 'amount': ''};
     this.setState({data: newData, numChildren: this.state.numChildren+1});
   },
 
+  catChange: function(event, index) {
+    console.log("cat change");
+    console.log(event.target);
+    console.log(index);
+  },
+
   deleteChild: function(e) {
-    console.log('remove task');
+    console.log('remove task: ' + e);
   },
 
   render: function() {
@@ -37,7 +43,7 @@ var WelcomeScreen = React.createClass({
             </div>
             <hr></hr>
             <a href="#" className="btn btn-primary bottom-buffer" onClick={this.addChild}>Add Category</a>
-            <AllCategories data={this.state.data} deleteChild={this.deleteChild}/>
+            <AllCategories data={this.state.data} deleteChild={this.deleteChild} catChange={this.catChange}/>
           </form>
           </div>
         </div>
@@ -48,11 +54,13 @@ var WelcomeScreen = React.createClass({
 
 var AllCategories = React.createClass({
   render: function() {
-    var categoryNodes = this.props.data.map(function(category) {
-      return (
-          <Category key={category.n} delete={this.props.data}/>
-      );
-    });
+    var deleteChild = this.props.deleteChild;
+    var catChange = this.props.catChange;
+    var categoryNodes = [];
+    for (var key in this.props.data){
+      categoryNodes.push(<Category key={key} deleteChild={deleteChild} reactKey={key} catChange={catChange}
+        data={this.props.data[key]}/>);
+    }
     return (
       <div>
         {categoryNodes}
@@ -64,16 +72,16 @@ var AllCategories = React.createClass({
 var Category = React.createClass({
   render: function() {
     return (
-      <div key={this.props.key}>
+      <div>
       <div className="form-group">
         <label>Category Name</label>
-        <input type="text" className="form-control" id="categoryname1"></input>
+        <input type="text" className="form-control" id="categoryname1" onChange={this.props.catChange(this.props.reactKey)} value={this.props.data.name}></input>
       </div>      
       <div className="form-group">
         <label>Amount</label>
         <input type="number" className="form-control" id="amount1"></input>
       </div>      
-      <a href="#" className="btn btn-danger btn-sm bottom-buffer" onClick={this.props.delete}>Delete Category</a>
+      <a href="#" className="btn btn-danger btn-sm bottom-buffer" onClick={this.props.deleteChild(this.props.reactKey)}>Delete Category</a>
       <hr></hr>
       </div>
       );
