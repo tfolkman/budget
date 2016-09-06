@@ -7,7 +7,7 @@ require('bootstrap');
 var WelcomeScreen = React.createClass({
 
   getInitialState: function() {
-    return {numChildren: 0, data: {0: {'name': '', 'amount': ''}}};
+    return {numChildren: 0, data: {0: {'name': 'Test Cat', 'amount': ''}}};
   },
 
   addChild: function() {
@@ -16,14 +16,24 @@ var WelcomeScreen = React.createClass({
     this.setState({data: newData, numChildren: this.state.numChildren+1});
   },
 
-  catChange: function(event, index) {
-    console.log("cat change");
-    console.log(event.target);
-    console.log(index);
+  catChange: function(event) {
+    var split = event.target.id.split("_")
+    var index = split[1];
+    var type = split[0];
+    var newData = this.state.data;
+    if (type === 'name'){
+      newData[index].name = event.target.value;
+    } else if (type === 'amount'){
+      newData[index].amount = event.target.value;
+    }
+    this.setState({data: newData});
   },
 
-  deleteChild: function(e) {
-    console.log('remove task: ' + e);
+  deleteChild: function(event) {
+    var index = event.target.id.split("_")[1]
+    var newData = this.state.data;
+    delete newData[index];
+    this.setState({data: newData});
   },
 
   render: function() {
@@ -75,13 +85,13 @@ var Category = React.createClass({
       <div>
       <div className="form-group">
         <label>Category Name</label>
-        <input type="text" className="form-control" id="categoryname1" onChange={this.props.catChange(this.props.reactKey)} value={this.props.data.name}></input>
+        <input type="text" className="form-control" id={"name_"+this.props.reactKey} value={this.props.data.name} onChange={this.props.catChange}></input>
       </div>      
       <div className="form-group">
         <label>Amount</label>
-        <input type="number" className="form-control" id="amount1"></input>
+        <input type="number" className="form-control" id={"amount_"+this.props.reactKey} value={this.props.data.amount} onChange={this.props.catChange}></input>
       </div>      
-      <a href="#" className="btn btn-danger btn-sm bottom-buffer" onClick={this.props.deleteChild(this.props.reactKey)}>Delete Category</a>
+      <a href="#" className="btn btn-danger btn-sm bottom-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>Delete Category</a>
       <hr></hr>
       </div>
       );
