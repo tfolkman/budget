@@ -7,7 +7,7 @@ require('bootstrap');
 var WelcomeScreen = React.createClass({
 
   getInitialState: function() {
-    return {numChildren: 0, data: {0: {'name': 'Test Cat', 'amount': ''}}};
+    return {numChildren: 0, data: {0: {'name': '', 'amount': ''}}};
   },
 
   addChild: function() {
@@ -36,6 +36,23 @@ var WelcomeScreen = React.createClass({
     this.setState({data: newData});
   },
 
+  handleSubmit: function(e) {
+    var serializedForm = jQuery( e.target ).serializeArray();
+    console.log(serializedForm);
+   jQuery.ajax({
+    url: "/submit_budget/",
+    dataType: 'json',
+    type: 'POST',
+    data: serializedForm,
+    success: function(data) {
+      this.setState({data: data});
+    }.bind(this),
+    error: function(xhr, status, err) {
+      console.error("/submit_budget", status, err.toString());
+    }.bind(this)
+   });
+  },
+
   render: function() {
     return (
     	<div className="container">
@@ -46,14 +63,15 @@ var WelcomeScreen = React.createClass({
         </div>
         <div className="row top-buffer">
           <div className="col-md-4 col-md-offset-4">
-          <form>
+          <form onSubmit={this.handleSubmit} >
             <div className="form-group">
               <label>Budget Name</label>
-              <input type="text" className="form-control" id="budgetName"></input>
+              <input type="text" className="form-control" id="budgetName" name="budgetName"></input>
             </div>
             <hr></hr>
             <a href="#" className="btn btn-primary bottom-buffer" onClick={this.addChild}>Add Category</a>
             <AllCategories data={this.state.data} deleteChild={this.deleteChild} catChange={this.catChange}/>
+            <input type="submit" value="Post" />
           </form>
           </div>
         </div>
@@ -85,11 +103,11 @@ var Category = React.createClass({
       <div>
       <div className="form-group">
         <label>Category Name</label>
-        <input type="text" className="form-control" id={"name_"+this.props.reactKey} value={this.props.data.name} onChange={this.props.catChange}></input>
+        <input type="text" className="form-control" id={"name_"+this.props.reactKey} value={this.props.data.name} onChange={this.props.catChange} name={"name_"+this.props.reactKey}></input>
       </div>      
       <div className="form-group">
         <label>Amount</label>
-        <input type="number" className="form-control" id={"amount_"+this.props.reactKey} value={this.props.data.amount} onChange={this.props.catChange}></input>
+        <input type="number" className="form-control" id={"amount_"+this.props.reactKey} value={this.props.data.amount} onChange={this.props.catChange} name={"amount_"+this.props.reactKey}></input>
       </div>      
       <a href="#" className="btn btn-danger btn-sm bottom-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>Delete Category</a>
       <hr></hr>

@@ -15,3 +15,7 @@ func (c *MainController) Get() {
 func (c *MainController) NewBudget() {
 	c.TplName = "newbudget.tpl"
 }
+
+func (this *MainController) SubmitBudget() {
+	this.Ctx.WriteString("hi i am a post")
+}
