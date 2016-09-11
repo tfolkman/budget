@@ -37,15 +37,17 @@ var WelcomeScreen = React.createClass({
   },
 
   handleSubmit: function(e) {
-    var serializedForm = jQuery( e.target ).serializeArray();
-    console.log(serializedForm);
+    e.preventDefault();
+    console.log(JSON.stringify(this.state.data))
    jQuery.ajax({
-    url: "/submit_budget/",
-    dataType: 'json',
+    url: "/submit_budget",
     type: 'POST',
-    data: serializedForm,
+    data: JSON.stringify(this.state.data),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: 'json',
+    cache: false,
     success: function(data) {
-      this.setState({data: data});
+        console.log("returned")
     }.bind(this),
     error: function(xhr, status, err) {
       console.error("/submit_budget", status, err.toString());

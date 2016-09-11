@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/astaxie/beego"
+	"log"
 )
 
 type MainController struct {
@@ -16,6 +17,14 @@ func (c *MainController) NewBudget() {
 	c.TplName = "newbudget.tpl"
 }
 
-func (this *MainController) SubmitBudget() {
-	this.Ctx.WriteString("hi i am a post")
+type mystruct struct {
+  FieldOne string `json:"field_one"`
+}
+
+func (c *MainController) SubmitBudget() {
+	log.Printf("'Received %+v'", c.Ctx.Input.RequestBody)
+	test := &mystruct{ FieldOne: "test" }
+    	c.Data["json"] = &test
+    	c.ServeJSON()
+	c.TplName = "mainPage.tpl"
 }
