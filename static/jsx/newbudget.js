@@ -7,7 +7,7 @@ require('bootstrap');
 var WelcomeScreen = React.createClass({
 
   getInitialState: function() {
-    return {numChildren: 0, data: {0: {'name': '', 'amount': ''}}};
+    return {month: 'base', name: '', numChildren: 0, data: {0: {'name': '', 'amount': ''}}};
   },
 
   addChild: function() {
@@ -36,13 +36,21 @@ var WelcomeScreen = React.createClass({
     this.setState({data: newData});
   },
 
+  nameChange: function(event) {
+    this.setState({name: event.target.value})
+  },
+
   handleSubmit: function(e) {
     e.preventDefault();
-    console.log(JSON.stringify(this.state.data))
+    var data = this.state.data;
+    data['nChildren'] = this.state.numChildren;
+    data['name'] = this.state.name;
+    data['month'] = this.state.month;
+    console.log(JSON.stringify(data))
    jQuery.ajax({
     url: "/submit_budget",
     type: 'POST',
-    data: JSON.stringify(this.state.data),
+    data: JSON.stringify(data),
     contentType: 'application/json;charset=UTF-8',
     dataType: 'json',
     cache: false,
@@ -68,7 +76,8 @@ var WelcomeScreen = React.createClass({
           <form onSubmit={this.handleSubmit} >
             <div className="form-group">
               <label>Budget Name</label>
-              <input type="text" className="form-control" id="budgetName" name="budgetName"></input>
+              <input type="text" className="form-control" id="budgetName" name="budgetName" value={this.state.name}
+                onChange={this.nameChange}></input>
             </div>
             <hr></hr>
             <a href="#" className="btn btn-primary bottom-buffer" onClick={this.addChild}>Add Category</a>
