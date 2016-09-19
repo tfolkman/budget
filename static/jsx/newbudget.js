@@ -55,7 +55,7 @@ var WelcomeScreen = React.createClass({
     dataType: 'json',
     cache: false,
     success: function(data) {
-        console.log("returned")
+      window.location = '/main_page'
     }.bind(this),
     error: function(xhr, status, err) {
       console.error("/submit_budget", status, err.toString());
