@@ -13,7 +13,7 @@ type MainController struct {
 }
 
 func (c *MainController) Get() {
-	c.TplName = "welcome.tpl"
+	c.TplName = "mainPage.tpl"
 }
 
 func (c *MainController) NewBudget() {

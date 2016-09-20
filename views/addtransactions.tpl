@@ -6,6 +6,7 @@
     <body>
     <div class="container">
         {{ template "nav.html" }}
-    </div>
+				<div id="transactions"></div>
     </body>
+    </div>
 </html>
