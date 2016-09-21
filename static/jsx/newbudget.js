@@ -80,9 +80,15 @@ var WelcomeScreen = React.createClass({
                 onChange={this.nameChange}></input>
             </div>
             <hr></hr>
+            <div className="row">
+            <div className="col-lg-4">
             <a href="#" className="btn btn-primary bottom-buffer" onClick={this.addChild}>Add Category</a>
+            </div>
+            <div className="col-lg-4">
+            <input className="btn btn-success" type="submit" value="Submit" />
+            </div>
+            </div>
             <AllCategories data={this.state.data} deleteChild={this.deleteChild} catChange={this.catChange}/>
-            <input type="submit" value="Post" />
           </form>
           </div>
         </div>
@@ -112,16 +118,22 @@ var Category = React.createClass({
   render: function() {
     return (
       <div>
+      <div className="col-lg-6">
       <div className="form-group">
         <label>Category Name</label>
         <input type="text" className="form-control" id={"name_"+this.props.reactKey} value={this.props.data.name} onChange={this.props.catChange} name={"name_"+this.props.reactKey}></input>
       </div>      
+      </div>
+      <div className="col-lg-5">
       <div className="form-group">
         <label>Amount</label>
         <input type="number" className="form-control" id={"amount_"+this.props.reactKey} value={this.props.data.amount} onChange={this.props.catChange} name={"amount_"+this.props.reactKey}></input>
       </div>      
-      <a href="#" className="btn btn-danger btn-sm bottom-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>Delete Category</a>
+      </div>
+      <div className="col-lg-1">
+      <a href="#" className="btn btn-danger btn-sm top-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>X</a>
       <hr></hr>
+      </div>
       </div>
       );
   }

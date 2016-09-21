@@ -4,21 +4,57 @@ var ReactDOM = require('react-dom');
 global.jQuery = require('jquery');
 require('bootstrap');
 
-var MainApp = React.createClass({
+var MainPage = React.createClass({
+  getInitialState: function() {
+    return {
+      budgetData: []
+    };
+  },
+
+  componentDidMount: function() {
+    this.serverRequest = jQuery.get(this.props.budgetSource, function (result) {
+      this.setState({
+        budgetData: result,
+      });
+    }.bind(this));
+  },
+
+  componentWillUnmount: function() {
+    this.serverRequest.abort();
+  },
+
+  render: function() {
+    var budgets = this.state.budgetData.map(function(b) {
+      return (
+        <BudgetRow name={b.Name} amount={b.Amount} key={b.ID} />
+      );
+    });
+    return (
+      <div className="budgets">
+        {budgets}
+      </div>
+    );
+  }
+});
+
+var BudgetRow = React.createClass({
+
   render: function() {
     return (
-    	<div className="container">
-  			<div className="row top-buffer">
-  				<div className="col-md-4 col-md-offset-4">
-						<a href="/new_budget" className="btn btn-primary">Welcome to the main page</a>
-					</div>
-				</div>
+      <div className="row">
+        <div className="col-lg-5">
+            {this.props.name}
+        </div>
+        <div className="col-lg-5">
+            {this.props.amount}
+        </div>
       </div>
     );
   }
 });
 
 ReactDOM.render(
-	<MainApp />,
-  document.getElementById('main')
+  <MainPage budgetSource="/get_budget" />,
+    document.getElementById('main')
 );
+

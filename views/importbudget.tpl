@@ -5,6 +5,6 @@
 		{{ template "head.html" }}
 </head>
 <body>
-	<div id="welcome"></div>
-	<script src="/static/js/welcome.js"></script>
+	<div id="importbudget"></div>
+	<script src="/static/js/importbudget.js"></script>
 </body>
