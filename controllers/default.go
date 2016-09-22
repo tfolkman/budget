@@ -16,13 +16,13 @@ func (c *MainController) Get() {
 	c.TplName = "mainPage.tpl"
 }
 
-func (c *MainController) NewBudget() {
-	c.TplName = "newbudget.tpl"
+func (c *MainController) EditBudget() {
+	c.TplName = "editbudget.tpl"
 }
 
-//func (c *MainController) ImportBudget() {
-//	c.TplName = "importbudget.tpl"
-//}
+func (c *MainController) AddTransactions() {
+	c.TplName = "addtransactions.tpl"
+}
 
 func (c *MainController) MainPage() {
 	c.TplName = "mainPage.tpl"
@@ -31,20 +31,6 @@ func (c *MainController) MainPage() {
 type mystruct struct {
 	FieldOne string `json:"field_one"`
 }
-
-//func (c *MainController) ImportBudgetPost() {
-//	reqBody := c.Ctx.Input.RequestBody
-//	var f interface{}
-//	json.Unmarshal(reqBody, &f)
-//	m := f.(map[string]interface{})
-//
-//	orm.RegisterDataBase("default", "postgres", "dbname=" + m["name"].(string) + " sslmode=disable")
-//	orm.RegisterModel(new(models.Budget))
-//
-//	returnValue := &mystruct{FieldOne: "test"}
-//	c.Data["json"] = &returnValue
-//	c.ServeJSON()
-//}
 
 func (c *MainController) GetBudget() {
 	o := orm.NewOrm()

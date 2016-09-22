@@ -4,7 +4,7 @@ var ReactDOM = require('react-dom');
 global.jQuery = require('jquery');
 require('bootstrap');
 
-var WelcomeScreen = React.createClass({
+var EditBudget = React.createClass({
 
   getInitialState: function() {
     return {month: 'base', name: '', numChildren: 0, data: {0: {'name': '', 'amount': ''}}};
@@ -65,33 +65,28 @@ var WelcomeScreen = React.createClass({
 
   render: function() {
     return (
-    	<div className="container">
-  			<div className="row top-buffer">
-  				<div className="col-md-4 col-md-offset-4">
-            <h2>New Budget</h2>
-					</div>
-        </div>
-        <div className="row top-buffer">
-          <div className="col-md-4 col-md-offset-4">
-          <form onSubmit={this.handleSubmit} >
+    <div>
+        <form onSubmit={this.handleSubmit} >
+            <div className="row">
+            <div className="col-lg-4">
             <div className="form-group">
-              <label>Budget Name</label>
-              <input type="text" className="form-control" id="budgetName" name="budgetName" value={this.state.name}
-                onChange={this.nameChange}></input>
+                <label>Budget Name</label>
+                <input type="text" className="form-control" id="budgetName" name="budgetName" value={this.state.name}
+                    onChange={this.nameChange}></input>
+            </div>
+            </div>
             </div>
             <hr></hr>
             <div className="row">
-            <div className="col-lg-4">
+            <div className="col-lg-2">
             <a href="#" className="btn btn-primary bottom-buffer" onClick={this.addChild}>Add Category</a>
             </div>
-            <div className="col-lg-4">
+            <div className="col-lg-2">
             <input className="btn btn-success" type="submit" value="Submit" />
             </div>
             </div>
             <AllCategories data={this.state.data} deleteChild={this.deleteChild} catChange={this.catChange}/>
           </form>
-          </div>
-        </div>
 			</div>
     );
   }
@@ -132,14 +127,14 @@ var Category = React.createClass({
       </div>
       <div className="col-lg-1">
       <a href="#" className="btn btn-danger btn-sm top-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>X</a>
-      <hr></hr>
       </div>
+      <hr></hr>
       </div>
       );
   }
 });
 
 ReactDOM.render(
-	<WelcomeScreen />,
-  document.getElementById('newbudget')
+	<EditBudget />,
+  document.getElementById('editbudget')
 );

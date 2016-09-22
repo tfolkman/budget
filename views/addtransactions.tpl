@@ -6,7 +6,8 @@
     <body>
     <div class="container">
         {{ template "nav.html" }}
-				<div id="transactions"></div>
+		<div id="transactions"></div>
+	</div>
+	<script src="/static/js/addtransactions.js"></script>
     </body>
-    </div>
 </html>
