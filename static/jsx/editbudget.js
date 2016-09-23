@@ -3,16 +3,29 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 global.jQuery = require('jquery');
 require('bootstrap');
+var Select = require('react-select');
 
 var EditBudget = React.createClass({
 
   getInitialState: function() {
-    return {month: 'base', name: '', numChildren: 0, data: {0: {'name': '', 'amount': ''}}};
+    return {month: 'base', name: '', numChildren: 0, data: {}};
+  },
+
+  componentDidMount: function() {
+    this.serverRequest = jQuery.get(this.props.budgetSource, function (result) {
+      this.setState({
+        data: result,
+      });
+    }.bind(this));
+  },
+
+  componentWillUnmount: function() {
+    this.serverRequest.abort();
   },
 
   addChild: function() {
     var newData = this.state.data;
-    newData[this.state.numChildren+1] = {'name': '', 'amount': ''};
+    newData[this.state.numChildren+1] = {'Name': '', 'Amount': ''};
     this.setState({data: newData, numChildren: this.state.numChildren+1});
   },
 
@@ -135,6 +148,6 @@ var Category = React.createClass({
 });
 
 ReactDOM.render(
-	<EditBudget />,
+	<EditBudget budgetSource="/get_budget"/>,
   document.getElementById('editbudget')
 );

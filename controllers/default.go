@@ -51,7 +51,6 @@ func (c *MainController) SubmitBudget() {
 		iString := strconv.Itoa(i)
 		f, _ := strconv.ParseFloat(m[iString].(map[string]interface{})["amount"].(string), 64)
 		budget.Amount = f
-		budget.Budget = m["name"].(string)
 		budget.Month = m["month"].(string)
 		budget.Name = m[iString].(map[string]interface{})["name"].(string)
 		o.Insert(budget)

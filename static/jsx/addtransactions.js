@@ -1,6 +1,8 @@
 // main.js
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Select = require('react-select');
+var Creatable = require('react-select/lib/Creatable.js')
 global.jQuery = require('jquery');
 require('bootstrap');
 
@@ -156,6 +158,9 @@ var Transaction = React.createClass({
       </div>
       <div className="col-lg-1">
       <a href="#" className="btn btn-danger btn-sm top-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>X</a>
+      </div>
+      <div className="col-lg-2">
+      <Creatable name="form-field-name" value="one" options={[{value:"groceries", label:"groceries"}]}/>
       </div>
       </div>
       <hr></hr>
