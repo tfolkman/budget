@@ -32,6 +32,23 @@ type mystruct struct {
 	FieldOne string `json:"field_one"`
 }
 
+func (c *MainController) GetUniques() {
+	o := orm.NewOrm()
+	var m map[string]orm.ParamsList
+	m = make(map[string]orm.ParamsList)
+	var accounts orm.ParamsList
+	var payees orm.ParamsList
+	var categories orm.ParamsList
+	_, _ = o.Raw("select distinct account from transaction;").ValuesFlat(&accounts)
+	_, _ = o.Raw("select distinct payee from transaction;").ValuesFlat(&payees)
+	_, _ = o.Raw("select distinct name from budget;").ValuesFlat(&categories)
+	m["accounts"] = accounts
+	m["payees"] = payees
+	m["categories"] = categories
+	c.Data["json"] = &m
+	c.ServeJSON();
+}
+
 func (c *MainController) GetBudget() {
 	o := orm.NewOrm()
 	var budgets []models.Budget

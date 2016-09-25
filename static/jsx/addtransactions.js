@@ -10,7 +10,21 @@ var TransactionScreen = React.createClass({
 
   getInitialState: function() {
     return {numChildren: 0, data: {0: {'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
-      'outflow': '', 'inflow': ''}}};
+      'outflow': '', 'inflow': ''}}, accounts: [], payees: [], categories: []};
+  },
+
+  componentDidMount: function() {
+    this.serverRequest = jQuery.get(this.props.uniqueSource, function (result) {
+      this.setState({
+        accounts: result.accounts,
+        payees: result.payees,
+        categories: result.categories
+      });
+    }.bind(this));
+  },
+
+  componentWillUnmount: function() {
+    this.serverRequest.abort();
   },
 
   addChild: function() {
@@ -21,25 +35,34 @@ var TransactionScreen = React.createClass({
   },
 
   catChange: function(event) {
+    console.log(event)
     console.log(event.target)
-    var split = event.target.id.split("_")
+    if (typeof event.target == 'undefined') {
+      var split = event.value.split("_")
+      var value = event.label
+    } else {
+      var split = event.target.id.split("_")
+      var value = event.target.value;
+    }
     var index = split[1];
     var type = split[0];
     var newData = this.state.data;
     if (type === 'account'){
-      newData[index].account = event.target.value;
+      console.log("account!!")
+      console.log(value)
+      newData[index].account = value;
     } else if (type === 'date'){
-      newData[index].date = event.target.value;
+      newData[index].date = value;
     } else if (type === 'payee'){
-      newData[index].payee = event.target.value;
+      newData[index].payee = value;
     } else if (type === 'category'){
-      newData[index].category = event.target.value;
+      newData[index].category = value;
     } else if (type === 'note'){
-      newData[index].note = event.target.value;
+      newData[index].note = value;
     } else if (type === 'outflow'){
-      newData[index].outflow = event.target.value;
+      newData[index].outflow = value;
     } else if (type === 'inflow'){
-      newData[index].inflow = event.target.value;
+      newData[index].inflow = value;
     }
     this.setState({data: newData});
   },
@@ -83,7 +106,8 @@ var TransactionScreen = React.createClass({
                 <input className="btn btn-success" type="submit" value="Submit" />
             </div>
         </div>
-        <AllTransactions data={this.state.data} deleteChild={this.deleteChild} catChange={this.catChange}/>
+        <AllTransactions data={this.state.data} deleteChild={this.deleteChild} catChange={this.catChange}
+          accounts={this.state.accounts} payees={this.state.payees} categories={this.state.categories}/>
     </form>
     </div>
     );
@@ -97,7 +121,7 @@ var AllTransactions = React.createClass({
     var transactionNodes = [];
     for (var key in this.props.data){
       transactionNodes.push(<Transaction key={key} deleteChild={deleteChild} reactKey={key} catChange={catChange}
-        data={this.props.data[key]}/>);
+        data={this.props.data[key]} accounts={this.props.accounts} payees={this.props.payees} categories={this.props.categories}/>);
     }
     return (
       <div>
@@ -109,13 +133,21 @@ var AllTransactions = React.createClass({
 
 var Transaction = React.createClass({
   render: function() {
+
+    var key = this.props.reactKey;
+    var accountValue = {value: this.props.data.account, label: this.props.data.account};
+    accountOptions = this.props.accounts.map(function(X) {
+      return {value: "account_" + key, label: X};
+    });
+
     return (
     <div>
       <div className="row">
       <div className="col-lg-2">
       <div className="form-group">
         <label>Account</label>
-        <input type="text" className="form-control" id={"account_"+this.props.reactKey} value={this.props.data.account} onChange={this.props.catChange} name={"account_"+this.props.reactKey}></input>
+        <Creatable id={"account_"+this.props.reactKey} value={accountValue} options={accountOptions}
+          onChange={this.props.catChange} name={"account_"+this.props.reactKey}></Creatable>
       </div>      
       </div>
       <div className="col-lg-2">
@@ -170,6 +202,6 @@ var Transaction = React.createClass({
 });
 
 ReactDOM.render(
-	<TransactionScreen />,
+	<TransactionScreen uniqueSource="/get_uniques"/>,
   document.getElementById('transactions')
 );
