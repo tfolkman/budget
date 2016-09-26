@@ -24,15 +24,29 @@ var MainPage = React.createClass({
   },
 
   render: function() {
+    var i = 0;
     var budgets = this.state.budgetData.map(function(b) {
+      i=i+1
       return (
-        <BudgetRow name={b.Name} amount={b.Amount} key={b.ID} />
+        <BudgetRow category={b.Category} amount={b.Amount} spent={b.Spent} key={i} />
       );
     });
     return (
-      <div className="budgets">
-        {budgets}
-      </div>
+    <div className="budgets">
+    <table id="categoryTable" className="display" cellSpacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Budgeted</th>
+                <th>Spent</th>
+                <th>Remaining</th>
+            </tr>
+        </thead>
+        <tbody>
+            {budgets}
+        </tbody>
+    </table>
+    </div>
     );
   }
 });
@@ -40,15 +54,14 @@ var MainPage = React.createClass({
 var BudgetRow = React.createClass({
 
   render: function() {
+    var remaining = (this.props.amount - this.props.spent);
     return (
-      <div className="row">
-        <div className="col-lg-5">
-            {this.props.name}
-        </div>
-        <div className="col-lg-5">
-            {this.props.amount}
-        </div>
-      </div>
+    <tr>
+        <td>{this.props.category}</td>
+        <td>{this.props.amount}</td>
+        <td>{this.props.spent}</td>
+        <td>{remaining.toFixed(2)}</td>
+    </tr>
     );
   }
 });

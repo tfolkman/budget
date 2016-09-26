@@ -14,6 +14,12 @@ type MainController struct {
 	beego.Controller
 }
 
+type Category struct {
+	Category string `orm:"type(text)"`
+	Amount float64
+	Spent float64
+}
+
 func (c *MainController) Get() {
 	c.TplName = "mainPage.tpl"
 }
@@ -53,9 +59,14 @@ func (c *MainController) GetUniques() {
 
 func (c *MainController) GetBudget() {
 	o := orm.NewOrm()
-	var budgets []models.Budget
-	o.QueryTable("budget").All(&budgets)
-	c.Data["json"] = &budgets
+	var categories []Category
+	num, err := o.Raw("select t.category, b.amount, sum(t.outflow)-sum(t.inflow) as spent from transaction as t left join budget as b on b.name=t.category group by t.category, b.amount;").QueryRows(&categories)
+	log.Println("get budget")
+	log.Println(num)
+	if err == nil {
+    		log.Println("user nums: ", num)
+	}
+	c.Data["json"] = &categories
 	c.ServeJSON()
 }
 
