@@ -6,6 +6,8 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/tfolkman/budget/models"
 	"strconv"
+	"time"
+	"log"
 )
 
 type MainController struct {
@@ -54,6 +56,35 @@ func (c *MainController) GetBudget() {
 	var budgets []models.Budget
 	o.QueryTable("budget").All(&budgets)
 	c.Data["json"] = &budgets
+	c.ServeJSON()
+}
+
+func (c *MainController) PostTransactions() {
+	reqBody := c.Ctx.Input.RequestBody
+	var f interface{}
+	json.Unmarshal(reqBody, &f)
+	m := f.(map[string]interface{})
+	o := orm.NewOrm()
+	for i := 0; i < int(m["nChildren"].(float64))+1; i++ {
+		transaction := new(models.Transaction)
+		iString := strconv.Itoa(i)
+		transaction.Account = m[iString].(map[string]interface{})["account"].(string)
+		transaction.Payee = m[iString].(map[string]interface{})["payee"].(string)
+		stringTime := m[iString].(map[string]interface{})["date"].(string)
+		t, _ := time.Parse("2006-01-02", stringTime)
+		log.Println(stringTime)
+		log.Println(t)
+		transaction.Date = t
+		transaction.Category = m[iString].(map[string]interface{})["category"].(string)
+		transaction.Note = m[iString].(map[string]interface{})["note"].(string)
+		outflow, _ := strconv.ParseFloat(m[iString].(map[string]interface{})["outflow"].(string), 64)
+		inflow, _ := strconv.ParseFloat(m[iString].(map[string]interface{})["inflow"].(string), 64)
+		transaction.Outflow = outflow
+		transaction.Inflow = inflow
+		log.Println(o.Insert(transaction))
+	}
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
 	c.ServeJSON()
 }
 

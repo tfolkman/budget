@@ -37,7 +37,10 @@ var TransactionScreen = React.createClass({
   catChange: function(event) {
     console.log(event)
     console.log(event.target)
-    if (typeof event.target == 'undefined') {
+    if (typeof event.labelKey != "undefined"){
+      var split = event.labelKey.split("_")
+      var value = event.valueKey;
+    } else if (typeof event.target == 'undefined') {
       var split = event.value.split("_")
       var value = event.label
     } else {
@@ -132,12 +135,33 @@ var AllTransactions = React.createClass({
 });
 
 var Transaction = React.createClass({
-  render: function() {
 
+
+  newAccount: function(e){
+    return {label: e.label, labelKey: "account_" + this.props.reactKey, valueKey: e.label.split(" ")[1]}
+  },
+
+  newPayee: function(e){
+    return {label: e.label, labelKey: "payee_" + this.props.reactKey, valueKey: e.label.split(" ")[1]}
+  },
+
+  promptText: function(label){
+    return "Create " + label + " category";
+  },
+
+  render: function() {
     var key = this.props.reactKey;
     var accountValue = {value: this.props.data.account, label: this.props.data.account};
-    accountOptions = this.props.accounts.map(function(X) {
+    var payeeValue = {value: this.props.data.payee, label: this.props.data.payee};
+    var categoryValue = {value: this.props.data.category, label: this.props.data.category};
+    var accountOptions = this.props.accounts.map(function(X) {
       return {value: "account_" + key, label: X};
+    });
+    var payeeOptions = this.props.payees.map(function(X) {
+      return {value: "payee_" + key, label: X};
+    });
+    var categoryOptions = this.props.categories.map(function(X) {
+      return {value: "category_" + key, label: X};
     });
 
     return (
@@ -147,7 +171,8 @@ var Transaction = React.createClass({
       <div className="form-group">
         <label>Account</label>
         <Creatable id={"account_"+this.props.reactKey} value={accountValue} options={accountOptions}
-          onChange={this.props.catChange} name={"account_"+this.props.reactKey}></Creatable>
+          onChange={this.props.catChange} name={"account_"+this.props.reactKey} newOptionCreator={this.newAccount}
+          promptTextCreator={this.promptText}></Creatable>
       </div>      
       </div>
       <div className="col-lg-2">
@@ -159,13 +184,16 @@ var Transaction = React.createClass({
       <div className="col-lg-2">
       <div className="form-group">
         <label>Payee</label>
-        <input type="text" className="form-control" id={"payee_"+this.props.reactKey} value={this.props.data.payee} onChange={this.props.catChange} name={"payee_"+this.props.reactKey}></input>
+        <Creatable id={"payee_"+this.props.reactKey} value={payeeValue} options={payeeOptions}
+          onChange={this.props.catChange} name={"payee_"+this.props.reactKey} newOptionCreator={this.newPayee}
+          promptTextCreator={this.promptText}></Creatable>
       </div>
       </div>
       <div className="col-lg-2">
       <div className="form-group">
         <label>Category</label>
-        <input type="text" className="form-control" id={"category_"+this.props.reactKey} value={this.props.data.category} onChange={this.props.catChange} name={"category_"+this.props.reactKey}></input>
+        <Select id={"category_"+this.props.reactKey} value={categoryValue} options={categoryOptions}
+          onChange={this.props.catChange} name={"category_"+this.props.reactKey}></Select>
       </div>
       </div>
       </div>
@@ -190,9 +218,6 @@ var Transaction = React.createClass({
       </div>
       <div className="col-lg-1">
       <a href="#" className="btn btn-danger btn-sm top-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>X</a>
-      </div>
-      <div className="col-lg-2">
-      <Creatable name="form-field-name" value="one" options={[{value:"groceries", label:"groceries"}]}/>
       </div>
       </div>
       <hr></hr>
