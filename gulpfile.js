@@ -7,7 +7,7 @@ var size = require('gulp-size');
 var transforms = [
     {
         transform: "babelify",
-        options: {presets: ["react"]}
+        options: {presets: ["es2015","react"]}
     }
 ];
 

@@ -18,6 +18,7 @@ type Category struct {
 	Category string `orm:"type(text)"`
 	Amount float64
 	Spent float64
+	Remaining float64
 }
 
 func (c *MainController) Get() {
@@ -60,7 +61,7 @@ func (c *MainController) GetUniques() {
 func (c *MainController) GetBudget() {
 	o := orm.NewOrm()
 	var categories []Category
-	num, err := o.Raw("select t.category, b.amount, sum(t.outflow)-sum(t.inflow) as spent from transaction as t left join budget as b on b.name=t.category group by t.category, b.amount;").QueryRows(&categories)
+	num, err := o.Raw("select t.category, b.amount, sum(t.outflow)-sum(t.inflow) as spent, round((b.amount - (sum(t.outflow)-sum(t.inflow)))::numeric, 2) as remaining from transaction as t left join budget as b on b.name=t.category group by t.category, b.amount;").QueryRows(&categories)
 	log.Println("get budget")
 	log.Println(num)
 	if err == nil {

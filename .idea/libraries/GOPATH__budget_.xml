@@ -17,6 +17,7 @@
       <root url="file://$PROJECT_DIR$/.idea" />
       <root url="file://$PROJECT_DIR$/.git" />
       <root url="file://$PROJECT_DIR$/../../beego/bee/.git" />
+      <root url="file://$PROJECT_DIR$/node_modules/babel-plugin-transform-regenerator/.test" />
       <root url="file://$PROJECT_DIR$/../../../gopkg.in/yaml.v2/.git" />
       <root url="file://$PROJECT_DIR$/node_modules/typings-global/node_modules/.bin" />
       <root url="file://$PROJECT_DIR$/node_modules/vinyl-fs/node_modules/.bin" />

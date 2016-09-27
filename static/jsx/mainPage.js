@@ -3,6 +3,14 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 global.jQuery = require('jquery');
 require('bootstrap');
+import {Table, Column, Cell} from 'fixed-data-table';
+
+
+const TextCell = ({rowIndex, data, col, props}) => (
+  <Cell {...props}>
+    {data[rowIndex][col]}
+  </Cell>
+);
 
 var MainPage = React.createClass({
   getInitialState: function() {
@@ -24,29 +32,40 @@ var MainPage = React.createClass({
   },
 
   render: function() {
-    var i = 0;
-    var budgets = this.state.budgetData.map(function(b) {
-      i=i+1
-      return (
-        <BudgetRow category={b.Category} amount={b.Amount} spent={b.Spent} key={i} />
-      );
-    });
+    var budgetData = this.state.budgetData;
     return (
-    <div className="budgets">
-    <table id="categoryTable" className="display" cellSpacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Category</th>
-                <th>Budgeted</th>
-                <th>Spent</th>
-                <th>Remaining</th>
-            </tr>
-        </thead>
-        <tbody>
-            {budgets}
-        </tbody>
-    </table>
-    </div>
+     <Table
+        rowHeight={50}
+        headerHeight={50}
+        rowsCount={budgetData.length}
+        width={jQuery(window).width() * 0.7}
+        height={500}
+        {...this.props}>
+        <Column
+          header={<Cell>Category</Cell>}
+          cell={<TextCell data={budgetData} col="Category" />}
+          fixed={true}
+          width={100}
+        />
+        <Column
+          header={<Cell>Budget</Cell>}
+          cell={<TextCell data={budgetData} col="Amount" />}
+          fixed={true}
+          width={100}
+        />
+        <Column
+          header={<Cell>Spent</Cell>}
+          cell={<TextCell data={budgetData} col="Spent" />}
+          fixed={true}
+          width={100}
+        />
+        <Column
+          header={<Cell>Remaining</Cell>}
+          cell={<TextCell data={budgetData} col="Remaining" />}
+          fixed={true}
+          width={100}
+        />
+     </Table>
     );
   }
 });
