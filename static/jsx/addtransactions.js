@@ -10,7 +10,7 @@ var TransactionScreen = React.createClass({
 
   getInitialState: function() {
     return {numChildren: 0, data: {0: {'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
-      'outflow': '', 'inflow': ''}}, accounts: [], payees: [], categories: []};
+      'outflow': '0', 'inflow': '0'}}, accounts: [], payees: [], categories: []};
   },
 
   componentDidMount: function() {

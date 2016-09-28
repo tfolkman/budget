@@ -1,2 +1,25 @@
 .top-buffer { margin-top:25px; }
 .bottom-buffer { margin-bottom:20px; }
+
+#transactions {
+    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#transactions td, #transactions th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#transactions tr:nth-child(even){background-color: #f2f2f2;}
+
+#transactions tr:hover {background-color: #ddd;}
+
+#transactions th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
