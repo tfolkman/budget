@@ -4,6 +4,7 @@ var ReactDOM = require('react-dom');
 var Select = require('react-select');
 global.jQuery = require('jquery');
 require('bootstrap');
+import Transaction from './addtransactions.js'
 
 var MainPage = React.createClass({
   getInitialState: function() {
@@ -12,18 +13,28 @@ var MainPage = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-    this.serverRequest = jQuery.get(this.props.transactionSource, function (result) {
-      this.setState({
-        transactions: result,
-      });
-    }.bind(this));
-    this.serverRequest2 = jQuery.get(this.props.uniqueSource, function (result) {
+  componentDidMount: function(){
+    this.getDates().done(this.getTransactions);
+  },
+
+  getDates: function(){
+    return jQuery.get(this.props.uniqueSource, function (result) {
+      var monthSelected = result.months[result.months.length - 1];
+      var yearSelected = result.years[result.years.length - 1];
       this.setState({
         years: result.years,
         months: result.months,
-        monthSelected: result.months[result.months.length - 1],
-        yearSelected: result.years[result.years.length - 1]
+        monthSelected: monthSelected,
+        yearSelected: yearSelected,
+      });
+    }.bind(this));
+  },
+
+  getTransactions: function(){
+    var tranUrl = this.props.transactionSource+"?month="+this.state.monthSelected+"&year="+this.state.yearSelected
+    this.serverRequest = jQuery.get(tranUrl, function (result) {
+      this.setState({
+        transactions: result,
       });
     }.bind(this));
   },
@@ -106,7 +117,7 @@ var BudgetRow = React.createClass({
 });
 
 ReactDOM.render(
-  <MainPage transactionSource="/get_budget" uniqueSource="/get_uniques"/>,
+  <MainPage transactionSource="/get_transactions" uniqueSource="/get_uniques"/>,
     document.getElementById('transactions')
 );
 
