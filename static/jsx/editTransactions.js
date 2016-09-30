@@ -2,9 +2,11 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Select = require('react-select');
+var ReactBSTable = require('react-bootstrap-table');
+var BootstrapTable = ReactBSTable.BootstrapTable;
+var TableHeaderColumn = ReactBSTable.TableHeaderColumn;
 global.jQuery = require('jquery');
 require('bootstrap');
-import Transaction from './addtransactions.js'
 
 var MainPage = React.createClass({
   getInitialState: function() {
@@ -31,6 +33,7 @@ var MainPage = React.createClass({
   },
 
   getTransactions: function(){
+    console.log(this.state.monthSelected);
     var tranUrl = this.props.transactionSource+"?month="+this.state.monthSelected+"&year="+this.state.yearSelected
     this.serverRequest = jQuery.get(tranUrl, function (result) {
       this.setState({
@@ -45,11 +48,12 @@ var MainPage = React.createClass({
   },
 
   monthChange: function(e) {
-    this.setState({monthSelected: e.value})
+    console.log("month change " + e.value);
+    this.setState({monthSelected: e.value}, this.getTransactions);
   },
 
   yearChange: function(e) {
-    this.setState({yearSelected: e.value})
+    this.setState({yearSelected: e.value}, this.getTransactions);
   },
 
   render: function() {
@@ -62,6 +66,16 @@ var MainPage = React.createClass({
     var yearOptions = this.state.years.map(function(X) {
       return {value: X, label: X};
     });
+    var transactionNodes = []
+    var transactionNodes = this.state.transactions.map(function(transaction) {
+      return <TransactionRow data={transaction} key={transaction.ID}/>;
+    });
+    const cellEditProp = {
+        mode: 'click'
+    };
+    const selectRowProp = {
+        mode: "checkbox"
+    };
     return (
     <div>
     <div className="row">
@@ -72,45 +86,29 @@ var MainPage = React.createClass({
     <Select value={yearValue} options={yearOptions} onChange={this.yearChange}></Select>
     </div>
     </div>
-    <table id="transactions">
-  <tbody>
-  <tr>
-    <th>Company</th>
-    <th>Contact</th>
-    <th>Country</th>
-  </tr>
-  <tr>
-    <td>Alfreds Futterkiste</td>
-    <td>Maria Anders</td>
-    <td>Germany</td>
-  </tr>
-  <tr>
-    <td>Berglunds snabbköp</td>
-    <td>Christina Berglund</td>
-    <td>Sweden</td>
-  </tr>
-  <tr>
-    <td>Centro comercial Moctezuma</td>
-    <td>Francisco Chang</td>
-    <td>Mexico</td>
-  </tr>
-  </tbody>
-</table>
+    <BootstrapTable data={this.state.transactions} striped={true} hover={true} cellEdit={ cellEditProp } deleteRow={true}
+            selectRow={ selectRowProp }>
+        <TableHeaderColumn dataField="ID" isKey={true} dataAlign="center" dataSort={true}>ID</TableHeaderColumn>
+        <TableHeaderColumn dataField="Account" dataSort={true}>Account</TableHeaderColumn>
+        <TableHeaderColumn dataField="Date">Date</TableHeaderColumn>
+    </BootstrapTable>
 </div>
     );
   }
 });
 
-var BudgetRow = React.createClass({
+var TransactionRow = React.createClass({
 
   render: function() {
-    var remaining = (this.props.amount - this.props.spent);
     return (
     <tr>
-        <td>{this.props.category}</td>
-        <td>{this.props.amount}</td>
-        <td>{this.props.spent}</td>
-        <td>{remaining.toFixed(2)}</td>
+        <td>{this.props.data.Account}</td>
+        <td>{this.props.data.Date}</td>
+        <td>{this.props.data.Payee}</td>
+        <td>{this.props.data.Category}</td>
+        <td>{this.props.data.Note}</td>
+        <td>{this.props.data.Outflow}</td>
+        <td>{this.props.data.Inflow}</td>
     </tr>
     );
   }
