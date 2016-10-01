@@ -82,6 +82,28 @@ func (c *MainController) GetUniques() {
 	c.ServeJSON();
 }
 
+func (c *MainController) UpdateTransaction() {
+	o := orm.NewOrm()
+	reqBody := c.Ctx.Input.RequestBody
+	transaction := new(models.Transaction)
+	json.Unmarshal(reqBody, &transaction)
+	log.Println(o.Update(transaction))
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
+	c.ServeJSON()
+}
+
+func (c *MainController) DeleteTransaction() {
+	o := orm.NewOrm()
+	reqBody := c.Ctx.Input.RequestBody
+	var id [1]int
+	json.Unmarshal(reqBody, &id)
+	log.Println(o.Delete(&models.Transaction{ID: id[0]}))
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
+	c.ServeJSON()
+}
+
 func (c *MainController) GetBudget() {
 	o := orm.NewOrm()
 	var categories []Category

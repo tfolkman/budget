@@ -19,6 +19,19 @@ var MainPage = React.createClass({
     this.getDates().done(this.getTransactions);
   },
 
+  getData: function() {
+    this.updateDates().done(this.getTransactions);
+  },
+
+  updateDates: function(){
+    return jQuery.get(this.props.uniqueSource, function (result) {
+      this.setState({
+        years: result.years,
+        months: result.months,
+      });
+    }.bind(this));
+  },
+
   getDates: function(){
     return jQuery.get(this.props.uniqueSource, function (result) {
       var monthSelected = result.months[result.months.length - 1];
@@ -49,11 +62,50 @@ var MainPage = React.createClass({
 
   monthChange: function(e) {
     console.log("month change " + e.value);
-    this.setState({monthSelected: e.value}, this.getTransactions);
+    this.setState({monthSelected: e.value}, this.getData);
   },
 
   yearChange: function(e) {
-    this.setState({yearSelected: e.value}, this.getTransactions);
+    this.setState({yearSelected: e.value}, this.getData);
+  },
+
+  dateFormat: function(cell, row){
+  return cell.substring(0, 10);
+  },
+
+  cellEdit: function(row, cellName, cellValue){
+   jQuery.ajax({
+    url: "/update_transaction",
+    type: 'POST',
+    data: JSON.stringify(row),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: 'json',
+    cache: false,
+    success: function(data) {
+        console.log("successfully updated transaction")
+    }.bind(this),
+    error: function(xhr, status, err) {
+      console.error("/update_transaction", status, err.toString());
+    }.bind(this)
+   });
+  },
+
+  deleteRow: function(row){
+    console.log(row)
+   jQuery.ajax({
+    url: "/delete_transaction",
+    type: 'POST',
+    data: JSON.stringify(row),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: 'json',
+    cache: false,
+    success: function(data) {
+        console.log("successfully deleted transaction")
+    }.bind(this),
+    error: function(xhr, status, err) {
+      console.error("/update_transaction", status, err.toString());
+    }.bind(this)
+   });
   },
 
   render: function() {
@@ -71,14 +123,18 @@ var MainPage = React.createClass({
       return <TransactionRow data={transaction} key={transaction.ID}/>;
     });
     const cellEditProp = {
-        mode: 'click'
+        mode: 'click',
+        afterSaveCell: this.cellEdit
+    };
+    const optionProp = {
+        onDeleteRow: this.deleteRow
     };
     const selectRowProp = {
         mode: "checkbox"
     };
     return (
     <div>
-    <div className="row">
+    <div className="row bottom-buffer">
     <div className="col-lg-2">
     <Select value={monthValue} options={monthOptions} onChange={this.monthChange}></Select>
     </div>
@@ -87,10 +143,15 @@ var MainPage = React.createClass({
     </div>
     </div>
     <BootstrapTable data={this.state.transactions} striped={true} hover={true} cellEdit={ cellEditProp } deleteRow={true}
-            selectRow={ selectRowProp }>
-        <TableHeaderColumn dataField="ID" isKey={true} dataAlign="center" dataSort={true}>ID</TableHeaderColumn>
+            selectRow={ selectRowProp } condensed={true} bordered={false} exportCSV={true} options={ optionProp }>
+        <TableHeaderColumn dataField="ID" isKey={true}>ID</TableHeaderColumn>
         <TableHeaderColumn dataField="Account" dataSort={true}>Account</TableHeaderColumn>
-        <TableHeaderColumn dataField="Date">Date</TableHeaderColumn>
+        <TableHeaderColumn dataField="Date" dataSort={true} dataFormat={this.dateFormat}>Date</TableHeaderColumn>
+        <TableHeaderColumn dataField="Payee" dataSort={true}>Payee</TableHeaderColumn>
+        <TableHeaderColumn dataField="Category" dataSort={true}>Category</TableHeaderColumn>
+        <TableHeaderColumn dataField="Note">Note</TableHeaderColumn>
+        <TableHeaderColumn dataField="Outflow" dataSort={true}>Outflow</TableHeaderColumn>
+        <TableHeaderColumn dataField="Inflow" dataSort={true}>Inflow</TableHeaderColumn>
     </BootstrapTable>
 </div>
     );
