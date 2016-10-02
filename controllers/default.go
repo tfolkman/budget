@@ -8,7 +8,15 @@ import (
 	"strconv"
 	"time"
 	"log"
+	"io/ioutil"
 )
+
+var budgetQuery string
+
+func init() {
+	q, _ := ioutil.ReadFile("./static/queries/budget.sql")
+	budgetQuery = string(q)
+}
 
 type MainController struct {
 	beego.Controller
@@ -16,9 +24,8 @@ type MainController struct {
 
 type Category struct {
 	Category string `orm:"type(text)"`
-	Amount float64
+	Budgeted float64
 	Spent float64
-	Remaining float64
 }
 
 func (c *MainController) Get() {
@@ -105,9 +112,13 @@ func (c *MainController) DeleteTransaction() {
 }
 
 func (c *MainController) GetBudget() {
+	var month int
+	var year int
+	c.Ctx.Input.Bind(&month, "month")
+	c.Ctx.Input.Bind(&year, "year")
 	o := orm.NewOrm()
 	var categories []Category
-	num, err := o.Raw("select t.category, b.amount, sum(t.outflow)-sum(t.inflow) as spent, round((b.amount - (sum(t.outflow)-sum(t.inflow)))::numeric, 2) as remaining from transaction as t left join budget as b on b.name=t.category group by t.category, b.amount;").QueryRows(&categories)
+	num, err := o.Raw(budgetQuery, month, year).QueryRows(&categories)
 	log.Println("get budget")
 	log.Println(num)
 	if err == nil {
@@ -144,22 +155,3 @@ func (c *MainController) PostTransactions() {
 	c.ServeJSON()
 }
 
-func (c *MainController) SubmitBudget() {
-	reqBody := c.Ctx.Input.RequestBody
-	var f interface{}
-	json.Unmarshal(reqBody, &f)
-	m := f.(map[string]interface{})
-	o := orm.NewOrm()
-	for i := 0; i < int(m["nChildren"].(float64))+1; i++ {
-		budget := new(models.Budget)
-		iString := strconv.Itoa(i)
-		f, _ := strconv.ParseFloat(m[iString].(map[string]interface{})["amount"].(string), 64)
-		budget.Amount = f
-		budget.Month = m["month"].(string)
-		budget.Name = m[iString].(map[string]interface{})["name"].(string)
-		o.Insert(budget)
-	}
-	returnValue := &mystruct{FieldOne: "test"}
-	c.Data["json"] = &returnValue
-	c.ServeJSON()
-}

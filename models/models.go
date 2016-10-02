@@ -6,7 +6,7 @@ import (
 
 type Budget struct {
 	ID     int
-	Month  string `orm:"type(text)"`
+	Month int
 	Year   int
 	Name   string `orm:"type(text)"`
 	Amount float64

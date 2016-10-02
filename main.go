@@ -40,9 +40,10 @@ func main() {
 
 	if count == 0 {
 		currentTime := time.Now()
+		m := time.Now().Month()
 		budget := new(models.Budget)
 		budget.Amount = 200.00
-		budget.Month = currentTime.Month().String()
+		budget.Month = int(m)
 		budget.Year = currentTime.Year()
 		budget.Name = "Groceries"
 		o.Insert(budget)

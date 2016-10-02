@@ -7,7 +7,7 @@
 <body>
     <div class="container">
         {{ template "nav.html" }}
-	<div id="editbudget"></div>
+	<div id="editBudget"></div>
 	</div>
-	<script src="/static/js/editbudget.js"></script>
+	<script src="/static/js/editBudget.js"></script>
 </body>
