@@ -3,14 +3,7 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 global.jQuery = require('jquery');
 require('bootstrap');
-import {Table, Column, Cell} from 'fixed-data-table';
 
-
-const TextCell = ({rowIndex, data, col, props}) => (
-  <Cell {...props}>
-    {data[rowIndex][col]}
-  </Cell>
-);
 
 var MainPage = React.createClass({
   getInitialState: function() {
@@ -70,20 +63,6 @@ var MainPage = React.createClass({
   }
 });
 
-var BudgetRow = React.createClass({
-
-  render: function() {
-    var remaining = (this.props.amount - this.props.spent);
-    return (
-    <tr>
-        <td>{this.props.category}</td>
-        <td>{this.props.amount}</td>
-        <td>{this.props.spent}</td>
-        <td>{remaining.toFixed(2)}</td>
-    </tr>
-    );
-  }
-});
 
 ReactDOM.render(
   <MainPage budgetSource="/get_budget" />,

@@ -36,6 +36,10 @@ func (c *MainController) EditBudget() {
 	c.TplName = "editbudget.tpl"
 }
 
+func (c *MainController) NewBudget() {
+	c.TplName = "newbudget.tpl"
+}
+
 func (c *MainController) EditTransactions() {
 	c.TplName = "editTransactions.tpl"
 }
@@ -74,17 +78,23 @@ func (c *MainController) GetUniques() {
 	var payees orm.ParamsList
 	var categories orm.ParamsList
 	var months orm.ParamsList
+	var budget_months orm.ParamsList
 	var years orm.ParamsList
+	var budget_years orm.ParamsList
 	_, _ = o.Raw("select distinct account from transaction;").ValuesFlat(&accounts)
 	_, _ = o.Raw("select distinct payee from transaction;").ValuesFlat(&payees)
 	_, _ = o.Raw("select distinct name from budget;").ValuesFlat(&categories)
+	_, _ = o.Raw("select distinct month from budget;").ValuesFlat(&budget_months)
+	_, _ = o.Raw("select distinct year from budget;").ValuesFlat(&budget_years)
 	_, _ = o.Raw("select distinct extract(month from date) from transaction order by date_part;").ValuesFlat(&months)
 	_, _ = o.Raw("select distinct extract(year from date) from transaction order by date_part;").ValuesFlat(&years)
 	m["accounts"] = accounts
 	m["payees"] = payees
 	m["categories"] = categories
 	m["months"] = months
+	m["budget_months"] = budget_months
 	m["years"] = years
+	m["budget_years"] = budget_years
 	c.Data["json"] = &m
 	c.ServeJSON();
 }
