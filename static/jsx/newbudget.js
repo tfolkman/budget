@@ -11,7 +11,7 @@ var ImportBudget = React.createClass({
     var d = new Date();
     var m = d.getMonth()+1;
     var y = d.getFullYear();
-    return {month: m, year: y, budgetYears: [], budgetMonths: [], monthSelected: '', yearSelected: '', disabled: true,
+    return {month: m.toString(), year: y.toString(), budgetYears: [], budgetMonths: [], monthSelected: '', yearSelected: '', disabled: true,
         checked: false};
   },
 
@@ -46,6 +46,27 @@ var ImportBudget = React.createClass({
   handleClick: function(e){
     var currDisabled = this.state.disabled;
     this.setState({checked: e.target.checked, disabled: !currDisabled});
+  },
+
+  handleSubmit: function(e) {
+   e.preventDefault();
+   var data = {year: this.state.year, month: this.state.month, base: this.state.checked, baseYear: this.state.yearSelected,
+    baseMonth: this.state.monthSelected}
+    console.log(JSON.stringify(data))
+   jQuery.ajax({
+    url: "/post_new_budget",
+    type: 'POST',
+    data: JSON.stringify(data),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: 'json',
+    cache: false,
+    success: function(data) {
+      window.location = '/main_page'
+    }.bind(this),
+    error: function(xhr, status, err) {
+      console.error("/post_new_budget", status, err.toString());
+    }.bind(this)
+   });
   },
 
   render: function() {
@@ -86,6 +107,11 @@ var ImportBudget = React.createClass({
             </div>
             <div className="col-lg-2">
                 <Select value={yearValue} options={yearOptions} onChange={this.yearChange} disabled={this.state.disabled}></Select>
+            </div>
+        </div>
+        <div className="row bottom-buffer">
+            <div className="col-lg-2">
+                <input className="btn btn-success" type="submit" value="Submit" />
             </div>
         </div>
     </form>

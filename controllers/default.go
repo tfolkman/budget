@@ -28,6 +28,14 @@ type Category struct {
 	Spent float64
 }
 
+type NewBudget struct {
+	Year string `json:"year"`
+	Month string `json:"month"`
+	Base bool `json:"base"`
+	BaseYear string `json:"baseYear"`
+	BaseMonth string `json:"baseMonth"`
+}
+
 func (c *MainController) Get() {
 	c.TplName = "mainPage.tpl"
 }
@@ -67,6 +75,18 @@ func (c *MainController) GetTransactions(){
 		month, year).QueryRows(&transactions)
 	c.Data["json"] = &transactions
 	c.ServeJSON()
+}
+
+func (c *MainController) PostNewBudget(){
+	o := orm.NewOrm()
+	var budgets []models.Budget
+	reqBody := c.Ctx.Input.RequestBody
+	var newBudget NewBudget
+	baseYear, _ := strconv.Atoi(newBudget.BaseYear)
+	baseMonth, _ := strconv.Atoi(newBudget.BaseMonth)
+	json.Unmarshal(reqBody, &newBudget)
+	qs = o.QueryTable("budget").Filter("month", baseMonth).Filter("year", baseYear).All(&budgets)
+	log.Println(newBudget)
 }
 
 
