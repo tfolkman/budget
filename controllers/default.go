@@ -82,11 +82,33 @@ func (c *MainController) PostNewBudget(){
 	var budgets []models.Budget
 	reqBody := c.Ctx.Input.RequestBody
 	var newBudget NewBudget
-	baseYear, _ := strconv.Atoi(newBudget.BaseYear)
-	baseMonth, _ := strconv.Atoi(newBudget.BaseMonth)
 	json.Unmarshal(reqBody, &newBudget)
-	qs = o.QueryTable("budget").Filter("month", baseMonth).Filter("year", baseYear).All(&budgets)
-	log.Println(newBudget)
+	baseYear, _ := strconv.Atoi(newBudget.BaseYear)
+	year, _ := strconv.Atoi(newBudget.Year)
+	month, _ := strconv.Atoi(newBudget.Month)
+	baseMonth, _ := strconv.Atoi(newBudget.BaseMonth)
+	o.QueryTable("budget").Filter("month", baseMonth).Filter("year", baseYear).All(&budgets)
+	if newBudget.Base {
+		o.QueryTable("budget").Filter("month", month).Filter("year", year).Delete()
+		for _, element := range budgets{
+			var tmpBudget models.Budget
+			tmpBudget.Month = month
+			tmpBudget.Amount = element.Amount
+			tmpBudget.Name = element.Name
+			tmpBudget.Year = year
+			o.Insert(&tmpBudget)
+		}
+	} else {
+		budget := new(models.Budget)
+		budget.Amount = 200.00
+		budget.Month = month
+		budget.Year = year
+		budget.Name = "Groceries"
+		o.Insert(budget)
+	}
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
+	c.ServeJSON()
 }
 
 
@@ -130,12 +152,34 @@ func (c *MainController) UpdateTransaction() {
 	c.ServeJSON()
 }
 
+func (c *MainController) InsertBudget() {
+	o := orm.NewOrm()
+	reqBody := c.Ctx.Input.RequestBody
+	budget := new(models.Budget)
+	json.Unmarshal(reqBody, &budget)
+	log.Println(o.Insert(budget))
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
+	c.ServeJSON()
+}
+
 func (c *MainController) DeleteTransaction() {
 	o := orm.NewOrm()
 	reqBody := c.Ctx.Input.RequestBody
 	var id [1]int
 	json.Unmarshal(reqBody, &id)
 	log.Println(o.Delete(&models.Transaction{ID: id[0]}))
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
+	c.ServeJSON()
+}
+
+func (c *MainController) DeleteBudget() {
+	o := orm.NewOrm()
+	reqBody := c.Ctx.Input.RequestBody
+	budget := new(models.Budget)
+	json.Unmarshal(reqBody, &budget)
+	o.QueryTable("budget").Filter("month", budget.Month).Filter("year", budget.Year).Filter("name", budget.Name).Delete()
 	returnValue := &mystruct{FieldOne: "test"}
 	c.Data["json"] = &returnValue
 	c.ServeJSON()

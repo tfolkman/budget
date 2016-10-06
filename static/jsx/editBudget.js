@@ -86,6 +86,9 @@ var MainPage = React.createClass({
   },
 
   deleteRow: function(row){
+    var data = {'Year': parseInt(this.state.yearSelected), 'Month': parseInt(this.state.monthSelected),
+        'Name': row[0]}
+    console.log(data)
    jQuery.ajax({
     url: "/delete_budget",
     type: 'POST',
@@ -98,6 +101,25 @@ var MainPage = React.createClass({
     }.bind(this),
     error: function(xhr, status, err) {
       console.error("/delete_budget", status, err.toString());
+    }.bind(this)
+   });
+  },
+
+  insertRow: function(row){
+    var data = {'Year': parseInt(this.state.yearSelected), 'Month': parseInt(this.state.monthSelected),
+        'Name': row.Category, 'Amount': parseFloat(row.Budgeted)}
+   jQuery.ajax({
+    url: "/insert_budget",
+    type: 'POST',
+    data: JSON.stringify(data),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: 'json',
+    cache: false,
+    success: function(data) {
+        console.log("successfully updated budget")
+    }.bind(this),
+    error: function(xhr, status, err) {
+      console.error("/insert_budget", status, err.toString());
     }.bind(this)
    });
   },
@@ -116,7 +138,8 @@ var MainPage = React.createClass({
         afterSaveCell: this.cellEdit
     };
     const optionProp = {
-        onDeleteRow: this.deleteRow
+        onDeleteRow: this.deleteRow,
+        afterInsertRow: this.insertRow
     };
     const selectRowProp = {
         mode: "checkbox"
@@ -135,9 +158,9 @@ var MainPage = React.createClass({
     </div>
     </div>
     <BootstrapTable data={this.state.budgets} striped={true} hover={true} cellEdit={ cellEditProp } deleteRow={true}
-            selectRow={ selectRowProp } condensed={true} bordered={false} exportCSV={true} options={ optionProp }>
-        <TableHeaderColumn dataField="ID" isKey={true}>ID</TableHeaderColumn>
-        <TableHeaderColumn dataField="Category" dataSort={true}>Category</TableHeaderColumn>
+            selectRow={ selectRowProp } condensed={true} bordered={false} exportCSV={true} options={ optionProp }
+            insertRow={true}>
+        <TableHeaderColumn dataField="Category" isKey={true} dataSort={true}>Category</TableHeaderColumn>
         <TableHeaderColumn dataField="Budgeted" dataSort={true}>Budgeted</TableHeaderColumn>
     </BootstrapTable>
 </div>
