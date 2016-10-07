@@ -90,7 +90,7 @@ func (c *MainController) PostNewBudget(){
 	o.QueryTable("budget").Filter("month", baseMonth).Filter("year", baseYear).All(&budgets)
 	if newBudget.Base {
 		o.QueryTable("budget").Filter("month", month).Filter("year", year).Delete()
-		for _, element := range budgets{
+		for _, element := range budgets {
 			var tmpBudget models.Budget
 			tmpBudget.Month = month
 			tmpBudget.Amount = element.Amount
@@ -177,15 +177,18 @@ func (c *MainController) DeleteTransaction() {
 func (c *MainController) DeleteBudget() {
 	o := orm.NewOrm()
 	reqBody := c.Ctx.Input.RequestBody
-	budget := new(models.Budget)
-	json.Unmarshal(reqBody, &budget)
-	o.QueryTable("budget").Filter("month", budget.Month).Filter("year", budget.Year).Filter("name", budget.Name).Delete()
+	var budgets []models.Budget
+	json.Unmarshal(reqBody, &budgets)
+	for _, element := range budgets {
+		log.Println(element)
+		o.QueryTable("budget").Filter("month", element.Month).Filter("year", element.Year).Filter("name", element.Name).Delete()
+	}
 	returnValue := &mystruct{FieldOne: "test"}
 	c.Data["json"] = &returnValue
 	c.ServeJSON()
 }
 
-func (c *MainController) GetBudget() {
+func (c *MainController) GetSummary() {
 	var month int
 	var year int
 	c.Ctx.Input.Bind(&month, "month")
@@ -196,9 +199,26 @@ func (c *MainController) GetBudget() {
 	log.Println("get budget")
 	log.Println(num)
 	if err == nil {
-    		log.Println("user nums: ", num)
+		log.Println("user nums: ", num)
 	}
 	c.Data["json"] = &categories
+	c.ServeJSON()
+}
+
+func (c *MainController) GetBudget() {
+	var month int
+	var year int
+	c.Ctx.Input.Bind(&month, "month")
+	c.Ctx.Input.Bind(&year, "year")
+	o := orm.NewOrm()
+	var budgets []models.Budget
+	num, err := o.QueryTable("budget").Filter("month", month).Filter("year", year).All(&budgets)
+	log.Println("get budget")
+	log.Println(num)
+	if err == nil {
+    		log.Println("user nums: ", num)
+	}
+	c.Data["json"] = &budgets
 	c.ServeJSON()
 }
 

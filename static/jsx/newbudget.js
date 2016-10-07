@@ -61,7 +61,7 @@ var ImportBudget = React.createClass({
     dataType: 'json',
     cache: false,
     success: function(data) {
-      //window.location = '/main_page'
+      window.location = '/edit_budget'
     }.bind(this),
     error: function(xhr, status, err) {
       console.error("/post_new_budget", status, err.toString());

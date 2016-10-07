@@ -34,8 +34,8 @@ var MainPage = React.createClass({
 
   getDates: function(){
     return jQuery.get(this.props.uniqueSource, function (result) {
-      var monthSelected = result.budget_months[result.budget_months.length - 1];
-      var yearSelected = result.budget_years[result.budget_years.length - 1];
+      var monthSelected = result.budget_months[0];
+      var yearSelected = result.budget_years[0];
       this.setState({
         years: result.budget_years,
         months: result.budget_months,
@@ -86,18 +86,23 @@ var MainPage = React.createClass({
   },
 
   deleteRow: function(row){
-    var data = {'Year': parseInt(this.state.yearSelected), 'Month': parseInt(this.state.monthSelected),
-        'Name': row[0]}
+    var data = []
+    var year = parseInt(this.state.yearSelected);
+    var month = parseInt(this.state.monthSelected);
+    row.map(function(X) {
+        var tmp = {'Year': year, 'Month': month, 'Name': X}
+        data.push(tmp);
+    });
     console.log(data)
    jQuery.ajax({
     url: "/delete_budget",
     type: 'POST',
-    data: JSON.stringify(row),
+    data: JSON.stringify(data),
     contentType: 'application/json;charset=UTF-8',
     dataType: 'json',
     cache: false,
     success: function(data) {
-        console.log("successfully deleted budget")
+        this.getDates().done(this.getBudgets);
     }.bind(this),
     error: function(xhr, status, err) {
       console.error("/delete_budget", status, err.toString());
@@ -107,7 +112,7 @@ var MainPage = React.createClass({
 
   insertRow: function(row){
     var data = {'Year': parseInt(this.state.yearSelected), 'Month': parseInt(this.state.monthSelected),
-        'Name': row.Category, 'Amount': parseFloat(row.Budgeted)}
+        'Name': row.Name, 'Amount': parseFloat(row.Amount)}
    jQuery.ajax({
     url: "/insert_budget",
     type: 'POST',
@@ -160,8 +165,8 @@ var MainPage = React.createClass({
     <BootstrapTable data={this.state.budgets} striped={true} hover={true} cellEdit={ cellEditProp } deleteRow={true}
             selectRow={ selectRowProp } condensed={true} bordered={false} exportCSV={true} options={ optionProp }
             insertRow={true}>
-        <TableHeaderColumn dataField="Category" isKey={true} dataSort={true}>Category</TableHeaderColumn>
-        <TableHeaderColumn dataField="Budgeted" dataSort={true}>Budgeted</TableHeaderColumn>
+        <TableHeaderColumn dataField="Name" isKey={true} dataSort={true}>Category</TableHeaderColumn>
+        <TableHeaderColumn dataField="Amount" dataSort={true}>Budgeted</TableHeaderColumn>
     </BootstrapTable>
 </div>
     );

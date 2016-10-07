@@ -118,10 +118,6 @@ var MainPage = React.createClass({
     var yearOptions = this.state.years.map(function(X) {
       return {value: X, label: X};
     });
-    var transactionNodes = []
-    var transactionNodes = this.state.transactions.map(function(transaction) {
-      return <TransactionRow data={transaction} key={transaction.ID}/>;
-    });
     const cellEditProp = {
         mode: 'click',
         afterSaveCell: this.cellEdit
@@ -154,23 +150,6 @@ var MainPage = React.createClass({
         <TableHeaderColumn dataField="Inflow" dataSort={true}>Inflow</TableHeaderColumn>
     </BootstrapTable>
 </div>
-    );
-  }
-});
-
-var TransactionRow = React.createClass({
-
-  render: function() {
-    return (
-    <tr>
-        <td>{this.props.data.Account}</td>
-        <td>{this.props.data.Date}</td>
-        <td>{this.props.data.Payee}</td>
-        <td>{this.props.data.Category}</td>
-        <td>{this.props.data.Note}</td>
-        <td>{this.props.data.Outflow}</td>
-        <td>{this.props.data.Inflow}</td>
-    </tr>
     );
   }
 });
