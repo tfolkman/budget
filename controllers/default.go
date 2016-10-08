@@ -152,6 +152,18 @@ func (c *MainController) UpdateTransaction() {
 	c.ServeJSON()
 }
 
+func (c *MainController) UpdateBudget() {
+	o := orm.NewOrm()
+	reqBody := c.Ctx.Input.RequestBody
+	budget := new(models.Budget)
+	json.Unmarshal(reqBody, &budget)
+	log.Println(budget)
+	log.Println(o.Update(budget))
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
+	c.ServeJSON()
+}
+
 func (c *MainController) InsertBudget() {
 	o := orm.NewOrm()
 	reqBody := c.Ctx.Input.RequestBody

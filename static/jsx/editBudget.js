@@ -19,6 +19,10 @@ var MainPage = React.createClass({
     this.getDates().done(this.getBudgets);
   },
 
+  sortNumber: function(a, b){
+    return parseInt(b) - parseInt(a);
+  },
+
   getData: function() {
     this.updateDates().done(this.getBudgets);
   },
@@ -26,19 +30,19 @@ var MainPage = React.createClass({
   updateDates: function(){
     return jQuery.get(this.props.uniqueSource, function (result) {
       this.setState({
-        years: result.budget_years,
-        months: result.budget_months,
+        years: result.budget_years.sort(this.sortNumber),
+        months: result.budget_months.sort(this.sortNumber),
       });
     }.bind(this));
   },
 
   getDates: function(){
     return jQuery.get(this.props.uniqueSource, function (result) {
-      var monthSelected = result.budget_months[0];
-      var yearSelected = result.budget_years[0];
+      var monthSelected = Math.max.apply(Math, result.budget_months);
+      var yearSelected = Math.max.apply(Math, result.budget_years);
       this.setState({
-        years: result.budget_years,
-        months: result.budget_months,
+        years: result.budget_years.sort(this.sortNumber),
+        months: result.budget_months.sort(this.sortNumber),
         monthSelected: monthSelected,
         yearSelected: yearSelected,
       });
@@ -69,6 +73,8 @@ var MainPage = React.createClass({
   },
 
   cellEdit: function(row, cellName, cellValue){
+    row['Amount'] = parseFloat(row['Amount'])
+    console.log(row)
    jQuery.ajax({
     url: "/update_budget",
     type: 'POST',

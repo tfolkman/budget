@@ -21,4 +21,5 @@ func init() {
 	beego.Router("/add_transactions", &controllers.MainController{}, "get:AddTransactions")
 	beego.Router("/delete_budget", &controllers.MainController{}, "post:DeleteBudget")
 	beego.Router("/insert_budget", &controllers.MainController{}, "post:InsertBudget")
+	beego.Router("/update_budget", &controllers.MainController{}, "post:UpdateBudget")
 }
