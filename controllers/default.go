@@ -65,14 +65,17 @@ type mystruct struct {
 }
 
 func (c *MainController) GetTransactions(){
-	var month int
-	var year int
+	var month string
+	var year string
 	c.Ctx.Input.Bind(&month, "month")
 	c.Ctx.Input.Bind(&year, "year")
 	o := orm.NewOrm()
+	log.Println(month)
+	log.Println(year)
 	var transactions []models.Transactions
-	_, _ = o.Raw("select * from transaction where extract(month from date) = ? and extract(year from date) = ?;",
+	_, _ = o.Raw("select * from transactions where strftime('%m', date) = ? and strftime('%Y', date) = ?;",
 		month, year).QueryRows(&transactions)
+	log.Println(transactions)
 	c.Data["json"] = &transactions
 	c.ServeJSON()
 }
@@ -123,13 +126,13 @@ func (c *MainController) GetUniques() {
 	var budget_months orm.ParamsList
 	var years orm.ParamsList
 	var budget_years orm.ParamsList
-	_, _ = o.Raw("select distinct account from transaction;").ValuesFlat(&accounts)
-	_, _ = o.Raw("select distinct payee from transaction;").ValuesFlat(&payees)
+	_, _ = o.Raw("select distinct account from transactions;").ValuesFlat(&accounts)
+	_, _ = o.Raw("select distinct payee from transactions;").ValuesFlat(&payees)
 	_, _ = o.Raw("select distinct name from budget;").ValuesFlat(&categories)
 	_, _ = o.Raw("select distinct month from budget;").ValuesFlat(&budget_months)
 	_, _ = o.Raw("select distinct year from budget;").ValuesFlat(&budget_years)
-	_, _ = o.Raw("select distinct extract(month from date) from transaction order by date_part;").ValuesFlat(&months)
-	_, _ = o.Raw("select distinct extract(year from date) from transaction order by date_part;").ValuesFlat(&years)
+	_, _ = o.Raw("select distinct strftime('%m', date) as month from transactions order by month;").ValuesFlat(&months)
+	_, _ = o.Raw("select distinct strftime('%Y', date) as year from transactions order by year;").ValuesFlat(&years)
 	if accounts == nil {
 		m["accounts"] = [1]string{"Visa"}
 	} else {
