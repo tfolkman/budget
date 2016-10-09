@@ -12,7 +12,7 @@ type Budget struct {
 	Amount float64
 }
 
-type Transaction struct {
+type Transactions struct {
 	ID       int
 	Account  string    `orm:"type(text)"`
 	Date     time.Time `orm:"typee(text)"`

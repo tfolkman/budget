@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	_ "github.com/lib/pq"
+	_ "github.com/mattn/go-sqlite3"
 	_ "github.com/tfolkman/budget/routers"
 	"github.com/tfolkman/budget/models"
 	"log"
@@ -11,10 +11,10 @@ import (
 )
 
 func init() {
-	orm.RegisterDriver("mysql", orm.DRPostgres)
-	orm.RegisterDataBase("default", "postgres", "dbname=budget_test sslmode=disable")
+	orm.RegisterDriver("mysql", orm.DRSqlite)
+	orm.RegisterDataBase("default", "sqlite3", "./data/budget.db")
 	orm.RegisterModel(new(models.Budget))
-	orm.RegisterModel(new(models.Transaction))
+	orm.RegisterModel(new(models.Transactions))
 }
 
 func main() {

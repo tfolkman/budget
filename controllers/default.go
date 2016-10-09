@@ -70,7 +70,7 @@ func (c *MainController) GetTransactions(){
 	c.Ctx.Input.Bind(&month, "month")
 	c.Ctx.Input.Bind(&year, "year")
 	o := orm.NewOrm()
-	var transactions []models.Transaction
+	var transactions []models.Transactions
 	_, _ = o.Raw("select * from transaction where extract(month from date) = ? and extract(year from date) = ?;",
 		month, year).QueryRows(&transactions)
 	c.Data["json"] = &transactions
@@ -114,8 +114,8 @@ func (c *MainController) PostNewBudget(){
 
 func (c *MainController) GetUniques() {
 	o := orm.NewOrm()
-	var m map[string]orm.ParamsList
-	m = make(map[string]orm.ParamsList)
+	var m map[string]interface{}
+	m = make(map[string]interface{})
 	var accounts orm.ParamsList
 	var payees orm.ParamsList
 	var categories orm.ParamsList
@@ -130,8 +130,16 @@ func (c *MainController) GetUniques() {
 	_, _ = o.Raw("select distinct year from budget;").ValuesFlat(&budget_years)
 	_, _ = o.Raw("select distinct extract(month from date) from transaction order by date_part;").ValuesFlat(&months)
 	_, _ = o.Raw("select distinct extract(year from date) from transaction order by date_part;").ValuesFlat(&years)
-	m["accounts"] = accounts
-	m["payees"] = payees
+	if accounts == nil {
+		m["accounts"] = [1]string{"Visa"}
+	} else {
+		m["accounts"] = accounts
+	}
+	if payees == nil {
+		m["payees"] = [1]string{"Costco"}
+	} else {
+		m["payees"] = payees
+	}
 	m["categories"] = categories
 	m["months"] = months
 	m["budget_months"] = budget_months
@@ -144,7 +152,7 @@ func (c *MainController) GetUniques() {
 func (c *MainController) UpdateTransaction() {
 	o := orm.NewOrm()
 	reqBody := c.Ctx.Input.RequestBody
-	transaction := new(models.Transaction)
+	transaction := new(models.Transactions)
 	json.Unmarshal(reqBody, &transaction)
 	log.Println(o.Update(transaction))
 	returnValue := &mystruct{FieldOne: "test"}
@@ -180,7 +188,7 @@ func (c *MainController) DeleteTransaction() {
 	reqBody := c.Ctx.Input.RequestBody
 	var id [1]int
 	json.Unmarshal(reqBody, &id)
-	log.Println(o.Delete(&models.Transaction{ID: id[0]}))
+	log.Println(o.Delete(&models.Transactions{ID: id[0]}))
 	returnValue := &mystruct{FieldOne: "test"}
 	c.Data["json"] = &returnValue
 	c.ServeJSON()
@@ -241,7 +249,7 @@ func (c *MainController) PostTransactions() {
 	m := f.(map[string]interface{})
 	o := orm.NewOrm()
 	for i := 0; i < int(m["nChildren"].(float64))+1; i++ {
-		transaction := new(models.Transaction)
+		transaction := new(models.Transactions)
 		iString := strconv.Itoa(i)
 		transaction.Account = m[iString].(map[string]interface{})["account"].(string)
 		transaction.Payee = m[iString].(map[string]interface{})["payee"].(string)
@@ -254,6 +262,7 @@ func (c *MainController) PostTransactions() {
 		inflow, _ := strconv.ParseFloat(m[iString].(map[string]interface{})["inflow"].(string), 64)
 		transaction.Outflow = outflow
 		transaction.Inflow = inflow
+		log.Println(transaction)
 		log.Println(o.Insert(transaction))
 	}
 	returnValue := &mystruct{FieldOne: "test"}
