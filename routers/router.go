@@ -15,6 +15,7 @@ func init() {
 	beego.Router("/delete_transaction", &controllers.MainController{}, "post:DeleteTransaction")
 	beego.Router("/get_transactions", &controllers.MainController{}, "get:GetTransactions")
 	beego.Router("/get_budget", &controllers.MainController{}, "get:GetBudget")
+	beego.Router("/get_summary", &controllers.MainController{}, "get:GetSummary")
 	beego.Router("/get_uniques", &controllers.MainController{}, "get:GetUniques")
 	beego.Router("/main_page", &controllers.MainController{}, "get:MainPage")
 	beego.Router("/post_transactions", &controllers.MainController{}, "post:PostTransactions")

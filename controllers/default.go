@@ -214,8 +214,8 @@ func (c *MainController) DeleteBudget() {
 }
 
 func (c *MainController) GetSummary() {
-	var month int
-	var year int
+	var month string
+	var year string
 	c.Ctx.Input.Bind(&month, "month")
 	c.Ctx.Input.Bind(&year, "year")
 	o := orm.NewOrm()
