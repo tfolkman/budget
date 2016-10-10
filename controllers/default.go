@@ -189,9 +189,11 @@ func (c *MainController) InsertBudget() {
 func (c *MainController) DeleteTransaction() {
 	o := orm.NewOrm()
 	reqBody := c.Ctx.Input.RequestBody
-	var id [1]int
-	json.Unmarshal(reqBody, &id)
-	log.Println(o.Delete(&models.Transactions{ID: id[0]}))
+	var ids []int
+	json.Unmarshal(reqBody, &ids)
+	for _, element := range ids {
+		log.Println(o.Delete(&models.Transactions{ID: element}))
+	}
 	returnValue := &mystruct{FieldOne: "test"}
 	c.Data["json"] = &returnValue
 	c.ServeJSON()
