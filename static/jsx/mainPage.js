@@ -12,7 +12,7 @@ var TableHeaderColumn = ReactBSTable.TableHeaderColumn;
 var MainPage = React.createClass({
   getInitialState: function() {
     return {
-      budgetData: []
+      budgetData: [], monthSelected: '', yearSelected: '', years: [], months: []
     };
   },
 
@@ -24,22 +24,26 @@ var MainPage = React.createClass({
     this.updateDates().done(this.getTransactions);
   },
 
+  sortNumber: function(a, b){
+    return parseInt(b) - parseInt(a);
+  },
+
   updateDates: function(){
     return jQuery.get(this.props.uniqueSource, function (result) {
       this.setState({
-        years: result.years,
-        months: result.months,
+        years: result.budget_years.sort(this.sortNumber),
+        months: result.budget_months.sort(this.sortNumber),
       });
     }.bind(this));
   },
 
   getDates: function(){
     return jQuery.get(this.props.uniqueSource, function (result) {
-      var monthSelected = result.months[result.months.length - 1];
-      var yearSelected = result.years[result.years.length - 1];
+      var monthSelected = Math.max.apply(Math, result.budget_months);
+      var yearSelected = Math.max.apply(Math, result.budget_years);
       this.setState({
-        years: result.years,
-        months: result.months,
+        years: result.budget_years.sort(this.sortNumber),
+        months: result.budget_months.sort(this.sortNumber),
         monthSelected: monthSelected,
         yearSelected: yearSelected,
       });
@@ -48,10 +52,12 @@ var MainPage = React.createClass({
 
   getTransactions: function(){
     console.log(this.state.monthSelected);
+    console.log(this.state.yearSelected);
     var tranUrl = this.props.transactionSource+"?month="+this.state.monthSelected+"&year="+this.state.yearSelected
+    console.log(tranUrl)
     this.serverRequest = jQuery.get(tranUrl, function (result) {
       this.setState({
-        transactions: result,
+        budgetData: result,
       });
     }.bind(this));
   },
@@ -70,7 +76,14 @@ var MainPage = React.createClass({
   },
 
   render: function() {
-    var budgetData = this.state.budgetData;
+    var monthValue = {value: this.state.monthSelected, label: this.state.monthSelected};
+    var yearValue = {value: this.state.yearSelected, label: this.state.yearSelected};
+    var monthOptions = this.state.months.map(function(X) {
+      return {value: X, label: X};
+    });
+    var yearOptions = this.state.years.map(function(X) {
+      return {value: X, label: X};
+    });
     return (
     <div>
     <div className="row bottom-buffer">
@@ -86,6 +99,7 @@ var MainPage = React.createClass({
         <TableHeaderColumn dataField="Category" isKey={true} dataSort={true}>Category</TableHeaderColumn>
         <TableHeaderColumn dataField="Budgeted" dataSort={true}>Budgeted</TableHeaderColumn>
         <TableHeaderColumn dataField="Spent" dataSort={true}>Spent</TableHeaderColumn>
+        <TableHeaderColumn dataField="Remaining" dataSort={true}>Remaining</TableHeaderColumn>
     </BootstrapTable>
 </div>
     );

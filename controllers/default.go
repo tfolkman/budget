@@ -26,6 +26,7 @@ type Category struct {
 	Category string `orm:"type(text)"`
 	Budgeted float64
 	Spent float64
+	Remaining float64
 }
 
 type NewBudget struct {
