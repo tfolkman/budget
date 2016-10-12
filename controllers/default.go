@@ -5,6 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/tfolkman/budget/models"
+	"github.com/tfolkman/budget/qfx"
 	"strconv"
 	"time"
 	"log"
@@ -45,6 +46,10 @@ func (c *MainController) EditBudget() {
 	c.TplName = "editbudget.tpl"
 }
 
+func (c *MainController) ImportData(){
+	c.TplName = "importData.tpl"
+}
+
 func (c *MainController) NewBudget() {
 	c.TplName = "newbudget.tpl"
 }
@@ -63,6 +68,12 @@ func (c *MainController) MainPage() {
 
 type mystruct struct {
 	FieldOne string `json:"field_one"`
+}
+
+func (c *MainController) GetFile() {
+    	c.SaveToFile("importData", "./data/import.qfx")
+	qfx.ReadQfx("./data/import.qfx")
+	c.TplName = "mainPage.tpl"
 }
 
 func (c *MainController) GetTransactions(){
