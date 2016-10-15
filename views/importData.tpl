@@ -10,7 +10,7 @@
 
         <div class="row">
             <div class="col-sm-12">
-                <form name="upload" id="upload" action="/get_file" method="post" enctype="multipart/form-data">
+                <form name="upload" id="upload" action="/confirm_import" method="post" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="exampleInputFile">Upload qfx files</label>
                         <input type="file" id="importData" name="importData" accept=".qfx">

@@ -70,10 +70,10 @@ type mystruct struct {
 	FieldOne string `json:"field_one"`
 }
 
-func (c *MainController) GetFile() {
+func (c *MainController) ConfirmImport() {
     	c.SaveToFile("importData", "./data/import.qfx")
 	qfx.ReadQfx("./data/import.qfx")
-	c.TplName = "mainPage.tpl"
+	c.TplName = "confirmImport.tpl"
 }
 
 func (c *MainController) GetTransactions(){
@@ -256,6 +256,14 @@ func (c *MainController) GetBudget() {
     		log.Println("user nums: ", num)
 	}
 	c.Data["json"] = &budgets
+	c.ServeJSON()
+}
+
+func (c *MainController) GetImportData(){
+	o := orm.NewOrm()
+	var imports []models.Transactions
+	_, _ = o.QueryTable("transactions").Filter("import", true).All(&imports)
+	c.Data["json"] = &imports
 	c.ServeJSON()
 }
 

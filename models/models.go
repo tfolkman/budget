@@ -21,4 +21,6 @@ type Transactions struct {
 	Note     string    `orm:"typ(date)"`
 	Outflow  float64
 	Inflow   float64
+	Import bool
 }
+

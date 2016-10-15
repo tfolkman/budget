@@ -7,9 +7,12 @@ import (
 	"strings"
 	"time"
 	"strconv"
+	"github.com/tfolkman/budget/models"
+	"github.com/astaxie/beego/orm"
 )
 
 func ReadQfx(fileName string) {
+	o := orm.NewOrm()
 	file, err := os.Open(fileName)
         if err != nil {
             log.Fatal(err)
@@ -50,12 +53,13 @@ func ReadQfx(fileName string) {
 			payee = text[6:len(text)]
 		}
 		if text == "</STMTTRN>"{
-			log.Println(credit)
-			log.Println(date)
-			log.Println(inflow)
-			log.Println(outflow)
-			log.Println(payee)
-			log.Println(text)
+			importData := new(models.Transactions)
+			importData.Date = date
+			importData.Inflow = inflow
+			importData.Outflow = outflow
+			importData.Payee = payee
+			importData.Import = true
+			o.Insert(importData)
 		}
         }
 
