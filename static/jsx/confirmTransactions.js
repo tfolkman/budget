@@ -9,7 +9,7 @@ require('bootstrap');
 var TransactionScreen = React.createClass({
 
   getInitialState: function() {
-    return {data: [], accounts: [], payees: [], categories: []};
+    return {data: [], accounts: [], categories: [], account: ''};
   },
 
   componentDidMount: function() {
@@ -20,8 +20,8 @@ var TransactionScreen = React.createClass({
     return jQuery.get(this.props.uniqueSource, function (result) {
       this.setState({
         accounts: result.accounts,
-        payees: result.payees,
-        categories: result.categories
+        categories: result.categories,
+        account: result.accounts[0]
       });
     }.bind(this));
   },
@@ -36,6 +36,14 @@ var TransactionScreen = React.createClass({
 
   componentWillUnmount: function() {
     this.serverRequest2.abort();
+  },
+
+  newAccount: function(e){
+    return {label: e.label, labelKey: "account_" + e.label, valueKey: e.label.split(" ")[1]}
+  },
+
+  promptText: function(label){
+    return "Create " + label + " category";
   },
 
   catChange: function(event) {
@@ -57,21 +65,12 @@ var TransactionScreen = React.createClass({
     if (type === 'account'){
       console.log("account!!")
       console.log(value)
-      newData[index].account = value;
-    } else if (type === 'date'){
-      newData[index].date = value;
-    } else if (type === 'payee'){
-      newData[index].payee = value;
+      this.setState({account: value})
     } else if (type === 'category'){
-      newData[index].category = value;
-    } else if (type === 'note'){
-      newData[index].note = value;
-    } else if (type === 'outflow'){
-      newData[index].outflow = value;
-    } else if (type === 'inflow'){
-      newData[index].inflow = value;
+        var data = this.state.data;
+        data[index].Category = value;
+        this.setState({data: data});
     }
-    this.setState({data: newData});
   },
 
   deleteChild: function(event) {
@@ -102,12 +101,24 @@ var TransactionScreen = React.createClass({
   },
 
   render: function() {
+    var accountValue = {value: this.state.account, label: this.state.account};
+    var accountOptions = this.state.accounts.map(function(X) {
+      return {value: "account_" + X, label: X};
+    });
     return (
     <div>
     <form onSubmit={this.handleSubmit} >
         <div className="row">
             <div className="col-lg-2">
                 <input className="btn btn-success" type="submit" value="Submit" />
+            </div>
+            <div className="col-lg-2">
+              <div className="form-group">
+                <label>Account</label>
+                <Creatable value={accountValue} options={accountOptions}
+                  onChange={this.catChange} newOptionCreator={this.newAccount}
+                  promptTextCreator={this.promptText}></Creatable>
+              </div>
             </div>
         </div>
         <AllTransactions data={this.state.data} deleteChild={this.deleteChild} catChange={this.catChange}
@@ -137,11 +148,6 @@ var AllTransactions = React.createClass({
 
 var Transaction = React.createClass({
 
-
-  newAccount: function(e){
-    return {label: e.label, labelKey: "account_" + this.props.reactKey, valueKey: e.label.split(" ")[1]}
-  },
-
   newPayee: function(e){
     return {label: e.label, labelKey: "payee_" + this.props.reactKey, valueKey: e.label.split(" ")[1]}
   },
@@ -152,15 +158,7 @@ var Transaction = React.createClass({
 
   render: function() {
     var key = this.props.reactKey;
-    var accountValue = {value: this.props.data.Account, label: this.props.data.Account};
-    var payeeValue = {value: this.props.data.Payee, label: this.props.data.Payee};
     var categoryValue = {value: this.props.data.Category, label: this.props.data.Category};
-    var accountOptions = this.props.accounts.map(function(X) {
-      return {value: "account_" + key, label: X};
-    });
-    var payeeOptions = this.props.payees.map(function(X) {
-      return {value: "payee_" + key, label: X};
-    });
     var categoryOptions = this.props.categories.map(function(X) {
       return {value: "category_" + key, label: X};
     });
@@ -170,24 +168,14 @@ var Transaction = React.createClass({
       <div className="row">
       <div className="col-lg-2">
       <div className="form-group">
-        <label>Account</label>
-        <Creatable id={"account_"+this.props.reactKey} value={accountValue} options={accountOptions}
-          onChange={this.props.catChange} name={"account_"+this.props.reactKey} newOptionCreator={this.newAccount}
-          promptTextCreator={this.promptText}></Creatable>
-      </div>      
-      </div>
-      <div className="col-lg-2">
-      <div className="form-group">
         <label>Date</label>
-        <input type="date" className="form-control" id={"date_"+this.props.reactKey} value={this.props.data.Date.substring(0,10)} onChange={this.props.catChange} name={"date_"+this.props.reactKey}></input>
+        <input type="date" className="form-control" id={"date_"+this.props.reactKey} value={this.props.data.Date.substring(0,10)} disabled name={"date_"+this.props.reactKey}></input>
       </div>      
       </div>
       <div className="col-lg-2">
       <div className="form-group">
         <label>Payee</label>
-        <Creatable id={"payee_"+this.props.reactKey} value={payeeValue} options={payeeOptions}
-          onChange={this.props.catChange} name={"payee_"+this.props.reactKey} newOptionCreator={this.newPayee}
-          promptTextCreator={this.promptText}></Creatable>
+        <input type="text" className="form-control" id={"payee_"+this.props.reactKey} value={this.props.data.Payee} disabled name={"payee_"+this.props.reactKey}></input>
       </div>
       </div>
       <div className="col-lg-2">
@@ -197,24 +185,16 @@ var Transaction = React.createClass({
           onChange={this.props.catChange} name={"category_"+this.props.reactKey}></Select>
       </div>
       </div>
-      </div>
-      <div className="row">
-      <div className="col-lg-2">
-      <div className="form-group">
-        <label>Note</label>
-        <input type="text" className="form-control" id={"note_"+this.props.reactKey} value={this.props.data.Note} onChange={this.props.catChange} name={"note_"+this.props.reactKey}></input>
-      </div>
-      </div>
       <div className="col-lg-2">
       <div className="form-group">
         <label>Outflow</label>
-        <input type="number" className="form-control" id={"outflow_"+this.props.reactKey} value={this.props.data.Outflow} onChange={this.props.catChange} name={"outflow_"+this.props.reactKey}></input>
+        <input type="number" className="form-control" id={"outflow_"+this.props.reactKey} value={this.props.data.Outflow} disabled name={"outflow_"+this.props.reactKey}></input>
       </div>
       </div>
       <div className="col-lg-2">
       <div className="form-group">
         <label>Inflow</label>
-        <input type="number" className="form-control" id={"inflow_"+this.props.reactKey} value={this.props.data.Inflow} onChange={this.props.catChange} name={"inflow_"+this.props.reactKey}></input>
+        <input type="number" className="form-control" id={"inflow_"+this.props.reactKey} value={this.props.data.Inflow} disabled name={"inflow_"+this.props.reactKey}></input>
       </div>
       </div>
       <div className="col-lg-1">
