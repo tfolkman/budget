@@ -38,6 +38,11 @@ type NewBudget struct {
 	BaseMonth string `json:"baseMonth"`
 }
 
+type Imports struct {
+	Data []models.Transactions `json:"data"`
+	Account string `json:"account`
+}
+
 func (c *MainController) Get() {
 	c.TplName = "mainPage.tpl"
 }
@@ -71,6 +76,7 @@ type mystruct struct {
 }
 
 func (c *MainController) ConfirmImport() {
+	log.Println("confirm import...")
     	c.SaveToFile("importData", "./data/import.qfx")
 	qfx.ReadQfx("./data/import.qfx")
 	c.TplName = "confirmImport.tpl"
@@ -89,6 +95,21 @@ func (c *MainController) GetTransactions(){
 		month, year).QueryRows(&transactions)
 	log.Println(transactions)
 	c.Data["json"] = &transactions
+	c.ServeJSON()
+}
+
+func (c *MainController) PostImports(){
+	o := orm.NewOrm()
+	var imports Imports
+	reqBody := c.Ctx.Input.RequestBody
+	json.Unmarshal(reqBody, &imports)
+	for _, element := range imports.Data {
+		element.Account = imports.Account
+		element.Import = false
+		o.Update(&element)
+	}
+	returnValue := &mystruct{FieldOne: "test"}
+	c.Data["json"] = &returnValue
 	c.ServeJSON()
 }
 

@@ -26,4 +26,5 @@ func init() {
 	beego.Router("/insert_budget", &controllers.MainController{}, "post:InsertBudget")
 	beego.Router("/update_budget", &controllers.MainController{}, "post:UpdateBudget")
 	beego.Router("/confirm_import", &controllers.MainController{}, "post:ConfirmImport")
+	beego.Router("/post_imports", &controllers.MainController{}, "post:PostImports")
 }

@@ -12,6 +12,7 @@ import (
 )
 
 func ReadQfx(fileName string) {
+	log.Println("Read QFX...")
 	o := orm.NewOrm()
 	file, err := os.Open(fileName)
         if err != nil {
@@ -28,6 +29,7 @@ func ReadQfx(fileName string) {
         scanner := bufio.NewScanner(file)
         for scanner.Scan() {
                 text := scanner.Text()
+		text = strings.TrimSpace(text)
 		if strings.Contains(text, "<TRNTYPE>"){
 			if strings.Contains(text, "CREDIT"){
 				credit = true
@@ -52,14 +54,15 @@ func ReadQfx(fileName string) {
 		if strings.Contains(text, "<NAME>"){
 			payee = text[6:len(text)]
 		}
-		if text == "</STMTTRN>"{
+		if strings.Contains(text, "</STMTTRN>"){
 			importData := new(models.Transactions)
 			importData.Date = date
 			importData.Inflow = inflow
 			importData.Outflow = outflow
 			importData.Payee = payee
 			importData.Import = true
-			o.Insert(importData)
+			log.Println(payee)
+			log.Println(o.Insert(importData))
 		}
         }
 

@@ -82,10 +82,11 @@ var TransactionScreen = React.createClass({
 
   handleSubmit: function(e) {
     e.preventDefault();
-    var data = this.state.data;
-    data['nChildren'] = this.state.numChildren;
+    var data = {}
+    data['data'] = this.state.data;
+    data['account'] = this.state.account;
    jQuery.ajax({
-    url: "/post_transactions",
+    url: "/post_imports",
     type: 'POST',
     data: JSON.stringify(data),
     contentType: 'application/json;charset=UTF-8',
@@ -95,7 +96,7 @@ var TransactionScreen = React.createClass({
       window.location = '/main_page'
     }.bind(this),
     error: function(xhr, status, err) {
-      console.error("/post_transactions", status, err.toString());
+      console.error("/post_imports", status, err.toString());
     }.bind(this)
    });
   },
