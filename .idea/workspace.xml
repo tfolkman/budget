@@ -4,9 +4,7 @@
     <list default="true" id="c41f488d-1b06-4431-9a34-5be26a894090" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/jsx/confirmTransactions.js" afterPath="$PROJECT_DIR$/static/jsx/confirmTransactions.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/default.go" afterPath="$PROJECT_DIR$/controllers/default.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/models.go" afterPath="$PROJECT_DIR$/models/models.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/qfx/qfx.go" afterPath="$PROJECT_DIR$/qfx/qfx.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routers/router.go" afterPath="$PROJECT_DIR$/routers/router.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="budget.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -31,7 +29,7 @@
         <entry file="file://$PROJECT_DIR$/controllers/default.go">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="108" column="24" selection-start-line="108" selection-start-column="24" selection-end-line="108" selection-end-column="24" />
+              <caret line="221" column="46" selection-start-line="221" selection-start-column="46" selection-end-line="221" selection-end-column="46" />
               <folding>
                 <element signature="e#21#218#0" expanded="true" />
               </folding>
@@ -39,51 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="qfx.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/qfx/qfx.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="import.qfx" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/data/import.qfx">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="57" column="27" selection-start-line="57" selection-start-column="27" selection-end-line="57" selection-end-column="27" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/models.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="23" column="26" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="confirmImport.tpl" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/views/confirmImport.tpl">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.18181819">
-              <caret line="10" column="35" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="confirmTransactions.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="confirmTransactions.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/static/jsx/confirmTransactions.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="88" column="22" selection-start-line="88" selection-start-column="22" selection-end-line="88" selection-end-column="22" />
+            <state vertical-scroll-proportion="1.0181818">
+              <caret line="105" column="32" selection-start-line="105" selection-start-column="32" selection-end-line="105" selection-end-column="32" />
               <folding />
             </state>
           </provider>
@@ -93,7 +51,7 @@
         <entry file="file://$PROJECT_DIR$/static/jsx/editTransactions.js">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="51" column="20" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="20" />
+              <caret line="99" column="7" selection-start-line="99" selection-start-column="7" selection-end-line="99" selection-end-column="7" />
               <folding />
             </state>
           </provider>
@@ -155,11 +113,11 @@
         <option value="$PROJECT_DIR$/views/confirmImport.tpl" />
         <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/views/importData.tpl" />
-        <option value="$PROJECT_DIR$/static/jsx/confirmTransactions.js" />
         <option value="$PROJECT_DIR$/routers/router.go" />
         <option value="$PROJECT_DIR$/qfx/qfx.go" />
-        <option value="$PROJECT_DIR$/controllers/default.go" />
         <option value="$PROJECT_DIR$/models/models.go" />
+        <option value="$PROJECT_DIR$/controllers/default.go" />
+        <option value="$PROJECT_DIR$/static/jsx/confirmTransactions.js" />
       </list>
     </option>
   </component>
@@ -167,7 +125,7 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1440" />
+    <option name="width" value="1600" />
     <option name="height" value="900" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -193,6 +151,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -302,7 +261,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -496,7 +454,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <frame x="0" y="0" width="1600" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24375" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -862,14 +820,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/jsx/editTransactions.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="20" selection-start-line="51" selection-start-column="20" selection-end-line="51" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/static/jsx/newbudget.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.078947365">
@@ -885,17 +835,33 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/jsx/confirmTransactions.js">
+    <entry file="file://$PROJECT_DIR$/views/confirmImport.tpl">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="88" column="22" selection-start-line="88" selection-start-column="22" selection-end-line="88" selection-end-column="22" />
+        <state vertical-scroll-proportion="0.18181819">
+          <caret line="10" column="35" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/models.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.38181818">
+          <caret line="23" column="26" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/import.qfx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2">
+          <caret line="57" column="27" selection-start-line="57" selection-start-column="27" selection-end-line="57" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/qfx/qfx.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.16363636">
           <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
           <folding />
         </state>
@@ -904,33 +870,25 @@
     <entry file="file://$PROJECT_DIR$/controllers/default.go">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="108" column="24" selection-start-line="108" selection-start-column="24" selection-end-line="108" selection-end-column="24" />
+          <caret line="221" column="46" selection-start-line="221" selection-start-column="46" selection-end-line="221" selection-end-column="46" />
           <folding>
             <element signature="e#21#218#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/models/models.go">
+    <entry file="file://$PROJECT_DIR$/static/jsx/editTransactions.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="23" column="26" selection-start-line="23" selection-start-column="26" selection-end-line="23" selection-end-column="26" />
+          <caret line="99" column="7" selection-start-line="99" selection-start-column="7" selection-end-line="99" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/data/import.qfx">
+    <entry file="file://$PROJECT_DIR$/static/jsx/confirmTransactions.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="57" column="27" selection-start-line="57" selection-start-column="27" selection-end-line="57" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/confirmImport.tpl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18181819">
-          <caret line="10" column="35" selection-start-line="10" selection-start-column="35" selection-end-line="10" selection-end-column="35" />
+        <state vertical-scroll-proportion="1.0181818">
+          <caret line="105" column="32" selection-start-line="105" selection-start-column="32" selection-end-line="105" selection-end-column="32" />
           <folding />
         </state>
       </provider>

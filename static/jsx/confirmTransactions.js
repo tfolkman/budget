@@ -9,7 +9,7 @@ require('bootstrap');
 var TransactionScreen = React.createClass({
 
   getInitialState: function() {
-    return {data: [], accounts: [], categories: [], account: ''};
+    return {data: [], accounts: [], categories: [], account: '', deletes: []};
   },
 
   componentDidMount: function() {
@@ -75,9 +75,13 @@ var TransactionScreen = React.createClass({
 
   deleteChild: function(event) {
     var index = event.target.id.split("_")[1]
+    var locIndex = event.target.id.split("_")[2]
+    console.log(index)
     var newData = this.state.data;
-    delete newData[index];
-    this.setState({data: newData});
+    delete newData[locIndex];
+    this.setState({data: newData,
+      deletes: this.state.deletes.concat([parseInt(index)])
+    });
   },
 
   handleSubmit: function(e) {
@@ -97,6 +101,21 @@ var TransactionScreen = React.createClass({
     }.bind(this),
     error: function(xhr, status, err) {
       console.error("/post_imports", status, err.toString());
+    }.bind(this)
+   });
+   console.log(this.state.deletes)
+    jQuery.ajax({
+    url: "/delete_transaction",
+    type: 'POST',
+    data: JSON.stringify(this.state.deletes),
+    contentType: 'application/json;charset=UTF-8',
+    dataType: 'json',
+    cache: false,
+    success: function(data) {
+        console.log("successfully deleted transaction")
+    }.bind(this),
+    error: function(xhr, status, err) {
+      console.error("/delete_transaction", status, err.toString());
     }.bind(this)
    });
   },
@@ -199,7 +218,7 @@ var Transaction = React.createClass({
       </div>
       </div>
       <div className="col-lg-1">
-      <a href="#" className="btn btn-danger btn-sm top-buffer" id={"delete_"+this.props.reactKey} onClick={this.props.deleteChild}>X</a>
+      <a href="#" className="btn btn-danger btn-sm top-buffer" id={"delete_"+this.props.data.ID+"_"+this.props.reactKey} onClick={this.props.deleteChild}>X</a>
       </div>
       </div>
       <hr></hr>

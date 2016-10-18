@@ -224,6 +224,7 @@ func (c *MainController) DeleteTransaction() {
 	reqBody := c.Ctx.Input.RequestBody
 	var ids []int
 	json.Unmarshal(reqBody, &ids)
+	log.Println(ids)
 	for _, element := range ids {
 		log.Println(o.Delete(&models.Transactions{ID: element}))
 	}
