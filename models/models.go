@@ -22,5 +22,7 @@ type Transactions struct {
 	Outflow  float64
 	Inflow   float64
 	Import   bool      `orm:"default(0)"`
+	Fitid 	 string    `orm:"type(text);null"`
+	Refnum 	 string    `orm:"type(text);null"`
 }
 

@@ -5,7 +5,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/tfolkman/budget/models"
-	"github.com/tfolkman/budget/qfx"
+	"github.com/tfolkman/budget/converters"
 	"strconv"
 	"time"
 	"log"
@@ -78,7 +78,7 @@ type mystruct struct {
 func (c *MainController) ConfirmImport() {
 	log.Println("confirm import...")
     	c.SaveToFile("importData", "./data/import.qfx")
-	qfx.ReadQfx("./data/import.qfx")
+	qfx.ReadQfx("./data/import.converters")
 	c.TplName = "confirmImport.tpl"
 }
 

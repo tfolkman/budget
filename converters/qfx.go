@@ -1,4 +1,4 @@
-package qfx
+package converters
 
 import (
 	"log"
@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 	"strconv"
+	"github.com/tfolkman/budget/models"
 )
 
 type Transaction struct {
@@ -16,16 +17,19 @@ type Transaction struct {
 	name string`xml:"NAME"`
 }
 
-func ReadQfx(fileName string) {
+func ReadQfx(fileName string) []models.Transactions {
 	log.Println("Read QFX...")
-	//o := orm.NewOrm()
 	xmlFile, err := os.Open(fileName)
         if err != nil {
             log.Fatal(err)
         }
 	decoder := xml.NewDecoder(xmlFile)
+	var transactions []models.Transactions
+	var transaction models.Transactions
 	var inElement string
 	var text string
+	var fitid string
+	var refnum string
 	var credit bool
 	var date time.Time
 	var inflow float64
@@ -64,6 +68,12 @@ func ReadQfx(fileName string) {
 			if inElement == "NAME"{
 				payee = text
 			}
+			if inElement == "FITID"{
+				fitid = text
+			}
+			if inElement == "REFNUM"{
+				refnum = text
+			}
 		case xml.StartElement:
 			inElement = se.Name.Local
 		case xml.EndElement:
@@ -71,24 +81,17 @@ func ReadQfx(fileName string) {
 			inElement = se.Name.Local
 			// ...and its name is "page"
 			if inElement == "STMTTRN" {
-				log.Println(date)
-				log.Println(inflow)
-				log.Println(outflow)
-				log.Println(payee)
-				log.Println(credit)
-				log.Println(inElement)
-				//importData := new(models.Transactions)
-				//importData.Date = date
-				//importData.Inflow = inflow
-				//importData.Outflow = outflow
-				//importData.Payee = payee
-				//importData.Import = true
-				//log.Println(payee)
-				//log.Println(o.Insert(importData))
+				transaction.Inflow = inflow
+				transaction.Date = date
+				transaction.Import = true
+				transaction.Outflow = outflow
+				transaction.Payee = payee
+				transaction.Refnum = refnum
+				transaction.Fitid = fitid
+				transactions = append(transactions, transaction)
 			}
 		default:
 		}
 	}
-
-	//log.Println(o.Insert(importData))
+	return transactions
 }
