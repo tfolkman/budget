@@ -78,7 +78,7 @@ type mystruct struct {
 func (c *MainController) ConfirmImport() {
 	log.Println("confirm import...")
     	c.SaveToFile("importData", "./data/import.qfx")
-	qfx.ReadQfx("./data/import.converters")
+	converters.ReadQfx("./data/import.qfx")
 	c.TplName = "confirmImport.tpl"
 }
 
