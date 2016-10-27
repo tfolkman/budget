@@ -76,9 +76,12 @@ type mystruct struct {
 }
 
 func (c *MainController) ConfirmImport() {
+	o := orm.NewOrm()
 	log.Println("confirm import...")
+	dedup := c.GetString("dedup")
     	c.SaveToFile("importData", "./data/import.qfx")
-	converters.ReadQfx("./data/import.qfx")
+	importedTransactions := converters.ReadQfx("./data/import.qfx", dedup)
+	o.InsertMulti(len(importedTransactions), &importedTransactions)
 	c.TplName = "confirmImport.tpl"
 }
 

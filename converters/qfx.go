@@ -8,6 +8,7 @@ import (
 	"time"
 	"strconv"
 	"github.com/tfolkman/budget/models"
+	"github.com/astaxie/beego/orm"
 )
 
 type Transaction struct {
@@ -17,8 +18,9 @@ type Transaction struct {
 	name string`xml:"NAME"`
 }
 
-func ReadQfx(fileName string) []models.Transactions {
+func ReadQfx(fileName string, dedup string) []models.Transactions {
 	log.Println("Read QFX...")
+	o := orm.NewOrm()
 	xmlFile, err := os.Open(fileName)
         if err != nil {
             log.Fatal(err)
@@ -35,6 +37,7 @@ func ReadQfx(fileName string) []models.Transactions {
 	var inflow float64
 	var outflow float64
 	var payee string
+	var cnt int64
 	for {
 		// Read tokens from the XML document in a stream.
 		t, _ := decoder.RawToken()
@@ -88,7 +91,21 @@ func ReadQfx(fileName string) []models.Transactions {
 				transaction.Payee = payee
 				transaction.Refnum = refnum
 				transaction.Fitid = fitid
-				transactions = append(transactions, transaction)
+				if dedup == "true"{
+					cnt, _ = o.QueryTable("transactions").Filter("fitid", fitid).
+					Filter("payee", payee).Filter("outflow", outflow).
+					Filter("inflow", inflow).Count()
+					if cnt <= 0 {
+						cnt, _ = o.QueryTable("transactions").Filter("refnum", fitid).
+						Filter("date", date).Filter("payee", payee).Filter("outflow", outflow).
+						Filter("inflow", inflow).Count()
+					}
+					if cnt == 0{
+						transactions = append(transactions, transaction)
+					}
+				} else {
+					transactions = append(transactions, transaction)
+				}
 			}
 		default:
 		}

@@ -5,9 +5,32 @@ import (
 	"github.com/tfolkman/budget/models"
 	"time"
 	"reflect"
+	"github.com/astaxie/beego/orm"
+	_ "github.com/mattn/go-sqlite3"
 )
 
-func Test(t *testing.T) {
+func init() {
+	orm.RegisterDriver("mysql", orm.DRSqlite)
+	orm.RegisterDataBase("default", "sqlite3", "../data/test.db")
+	orm.RegisterModel(new(models.Transactions))
+	_ = orm.RunSyncdb("default", false, true)
+}
+
+func TestDeDup(t *testing.T) {
+	o := orm.NewOrm()
+	_ = o.Raw("delete from transactions;")
+	dedup := "true"
+	transactions := ReadQfx("amex_test.qfx", dedup)
+	o.InsertMulti(len(transactions), &transactions)
+	transactions2 := ReadQfx("amex_test.qfx", dedup)
+	v := len(transactions2)
+	if v != 0 {
+		t.Error("Expected 0, got ", v)
+	}
+}
+
+
+func TestAmexImport(t *testing.T) {
 	var transation1 models.Transactions
 	transation1.Payee = "Test Name"
 	date, _ := time.Parse("20060102", "20160924")
@@ -39,7 +62,8 @@ func Test(t *testing.T) {
 	transaction3.Refnum = "3162720575990417"
 
 	allTransactions := []models.Transactions{transation1, transaction2, transaction3}
-	transactions := ReadQfx("amex_test.qfx")
+	dedup := "false"
+	transactions := ReadQfx("amex_test.qfx", dedup)
 	v := reflect.DeepEqual(transactions, allTransactions)
 	if v != true {
     		t.Error("Expected true, got ", v)

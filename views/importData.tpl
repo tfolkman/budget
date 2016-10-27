@@ -15,6 +15,9 @@
                         <label for="exampleInputFile">Upload qfx files</label>
                         <input type="file" id="importData" name="importData" accept=".qfx">
                     </div>
+                    <div class="checkbox active">
+                        <label><input type="checkbox" value="true" checked="checked" name="dedup" id="dedup">Remove Duplicate Transactions</label>
+                    </div>
                     <button id="upload-file-btn" type="submit" class="btn btn-default">Submit</button>
                 </form>
             </div>
