@@ -69,3 +69,32 @@ func TestAmexImport(t *testing.T) {
     		t.Error("Expected true, got ", v)
   	}
   }
+
+func TestChaseImport(t *testing.T) {
+
+	var transation1 models.Transactions
+	transation1.Payee = "Test"
+	date, _ := time.Parse("20060102", "20161026")
+	transation1.Date = date
+	transation1.Inflow = 0
+	transation1.Outflow = 9.00
+	transation1.Import = true
+	transation1.Fitid = "204247606300000775963444"
+
+	var transation2 models.Transactions
+	transation2.Payee = "Test2"
+	date2, _ := time.Parse("20060102", "20161025")
+	transation2.Date = date2
+	transation2.Inflow = 9.00
+	transation2.Outflow = 0
+	transation2.Import = true
+	transation2.Fitid = "204247606300000775963445"
+
+	allTransactions := []models.Transactions{transation1, transation2}
+	dedup := "false"
+	transactions := ReadQfx("chase_test.qfx", dedup)
+	v := reflect.DeepEqual(transactions, allTransactions)
+	if v != true {
+		t.Error("Expected true, got ", v)
+	}
+}

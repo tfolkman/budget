@@ -46,7 +46,7 @@ func ReadQfx(fileName string, dedup string) []models.Transactions {
 		}
 		switch se := t.(type) {
 		case xml.CharData:
-			text = string(t.(xml.CharData))
+			text = strings.TrimSpace(string(t.(xml.CharData)))
 			if inElement == "TRNTYPE"{
 				if strings.Contains(text, "CREDIT"){
 					credit = true
