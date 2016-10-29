@@ -55,8 +55,8 @@ func TestAmexImport(t *testing.T) {
 	transaction3.Payee = "Test Name 3"
 	date3,  _ := time.Parse("20060102", "20160928")
 	transaction3.Date = date3
-	transaction3.Inflow = 0
-	transaction3.Outflow = 27.23
+	transaction3.Inflow = 27.23
+	transaction3.Outflow = 0
 	transaction3.Import = true
 	transaction3.Fitid = "320162720990417"
 	transaction3.Refnum = "3162720575990417"
@@ -93,6 +93,35 @@ func TestChaseImport(t *testing.T) {
 	allTransactions := []models.Transactions{transation1, transation2}
 	dedup := "false"
 	transactions := ReadQfx("chase_test.qfx", dedup)
+	v := reflect.DeepEqual(transactions, allTransactions)
+	if v != true {
+		t.Error("Expected true, got ", v)
+	}
+}
+
+func TestAllyImport(t *testing.T) {
+
+	var transation1 models.Transactions
+	transation1.Payee = "Interest Paid"
+	date, _ := time.Parse("20060102", "20161025")
+	transation1.Date = date
+	transation1.Inflow = 0.31
+	transation1.Outflow = 0
+	transation1.Import = true
+	transation1.Fitid = "103691740196"
+
+	var transation2 models.Transactions
+	transation2.Payee = "PAYMENT"
+	date2, _ := time.Parse("20060102", "20161025")
+	transation2.Date = date2
+	transation2.Inflow = 0
+	transation2.Outflow = 4.98
+	transation2.Import = true
+	transation2.Fitid = "103691740193"
+
+	allTransactions := []models.Transactions{transation1, transation2}
+	dedup := "false"
+	transactions := ReadQfx("ally_test.qfx", dedup)
 	v := reflect.DeepEqual(transactions, allTransactions)
 	if v != true {
 		t.Error("Expected true, got ", v)

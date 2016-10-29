@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"github.com/tfolkman/budget/models"
 	"github.com/astaxie/beego/orm"
+	"math"
 )
 
 type Transaction struct {
@@ -32,7 +33,6 @@ func ReadQfx(fileName string, dedup string) []models.Transactions {
 	var text string
 	var fitid string
 	var refnum string
-	var credit bool
 	var date time.Time
 	var inflow float64
 	var outflow float64
@@ -47,25 +47,17 @@ func ReadQfx(fileName string, dedup string) []models.Transactions {
 		switch se := t.(type) {
 		case xml.CharData:
 			text = strings.TrimSpace(string(t.(xml.CharData)))
-			if inElement == "TRNTYPE"{
-				if strings.Contains(text, "CREDIT"){
-					credit = true
-				} else {
-					credit = false
-				}
-			}
 			if inElement == "DTPOSTED"{
 				date, _ = time.Parse("20060102", text[:8])
 			}
 			if inElement == "TRNAMT"{
-				if credit {
-					num, _ := strconv.ParseFloat(text, 64)
-					inflow = num
-					outflow = 0.0
+				num, _ := strconv.ParseFloat(text, 64)
+				if num < 0 {
+					outflow = math.Abs(num)
+					inflow = 0
 				} else {
-					num, _ := strconv.ParseFloat(text[1:len(text)], 64)
-					outflow = num
-					inflow = 0.0
+					inflow = num
+					outflow = 0
 				}
 			}
 			if inElement == "NAME"{
