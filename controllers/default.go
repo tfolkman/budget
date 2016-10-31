@@ -298,7 +298,7 @@ func (c *MainController) PostTransactions() {
 	json.Unmarshal(reqBody, &f)
 	m := f.(map[string]interface{})
 	o := orm.NewOrm()
-	for i := 0; i < int(m["nChildren"].(float64))+1; i++ {
+	for i := 0; i < int(m["nChildren"].(float64)); i++ {
 		transaction := new(models.Transactions)
 		iString := strconv.Itoa(i)
 		transaction.Account = m[iString].(map[string]interface{})["account"].(string)
