@@ -8,6 +8,6 @@
         {{ template "nav.html" }}
 		<div id="transactions"></div>
 	</div>
-	<script src="/static/js/edittransactions.js"></script>
+	<script src="/static/js/editTransactions.js"></script>
     </body>
 </html>
