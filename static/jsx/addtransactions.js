@@ -9,8 +9,8 @@ require('bootstrap');
 var TransactionScreen = React.createClass({
 
   getInitialState: function() {
-    return {numChildren: 0, data: {0: {'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
-      'outflow': '0', 'inflow': '0'}}, accounts: [], payees: [], categories: []};
+    return {data: [{'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
+      'outflow': '0', 'inflow': '0'}], accounts: [], payees: [], categories: []};
   },
 
   componentDidMount: function() {
@@ -29,9 +29,9 @@ var TransactionScreen = React.createClass({
 
   addChild: function() {
     var newData = this.state.data;
-    newData[this.state.numChildren+1] = {'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
-      'outflow': '', 'inflow': ''};
-    this.setState({data: newData, numChildren: this.state.numChildren+1});
+    newData.push({'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
+      'outflow': '', 'inflow': ''});
+    this.setState({data: newData});
   },
 
   catChange: function(event) {
@@ -73,14 +73,13 @@ var TransactionScreen = React.createClass({
   deleteChild: function(event) {
     var index = event.target.id.split("_")[1]
     var newData = this.state.data;
-    delete newData[index];
+    delete newData.splice(index, 1);
     this.setState({data: newData});
   },
 
   handleSubmit: function(e) {
     e.preventDefault();
     var data = this.state.data;
-    data['nChildren'] = this.state.numChildren;
    jQuery.ajax({
     url: "/post_transactions",
     type: 'POST',
@@ -121,10 +120,15 @@ var AllTransactions = React.createClass({
   render: function() {
     var deleteChild = this.props.deleteChild;
     var catChange = this.props.catChange;
+    var key = 0;
+    var data = this.props.data;
+    var accounts = this.props.accounts;
+    var payees = this.props.payees;
+    var categories = this.props.categories;
     var transactionNodes = [];
-    for (var key in this.props.data){
-      transactionNodes.push(<Transaction key={key} deleteChild={deleteChild} reactKey={key} catChange={catChange}
-        data={this.props.data[key]} accounts={this.props.accounts} payees={this.props.payees} categories={this.props.categories}/>);
+    for (var i = 0; i < data.length; i++) {
+      transactionNodes.push(<Transaction key={i} deleteChild={deleteChild} reactKey={i} catChange={catChange}
+        data={data[i]} accounts={accounts} payees={payees} categories={categories}/>);
     }
     return (
       <div>
