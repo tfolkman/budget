@@ -70,7 +70,12 @@ var MainPage = React.createClass({
   },
 
   dateFormat: function(cell, row){
-  return cell.substring(0, 10);
+    console.log(cell)
+    try {
+        return cell.substring(0, 10);
+    } catch (e) {
+        return cell;
+    }
   },
 
   cellEdit: function(row, cellName, cellValue){
@@ -141,13 +146,13 @@ var MainPage = React.createClass({
     <BootstrapTable data={this.state.transactions} striped={true} hover={true} cellEdit={ cellEditProp } deleteRow={true}
             selectRow={ selectRowProp } condensed={true} bordered={false} exportCSV={true} options={ optionProp }>
         <TableHeaderColumn dataField="ID" isKey={true}>ID</TableHeaderColumn>
-        <TableHeaderColumn dataField="Account" dataSort={true}>Account</TableHeaderColumn>
-        <TableHeaderColumn dataField="Date" dataSort={true} dataFormat={this.dateFormat}>Date</TableHeaderColumn>
-        <TableHeaderColumn dataField="Payee" dataSort={true}>Payee</TableHeaderColumn>
-        <TableHeaderColumn dataField="Category" dataSort={true}>Category</TableHeaderColumn>
-        <TableHeaderColumn dataField="Note">Note</TableHeaderColumn>
-        <TableHeaderColumn dataField="Outflow" dataSort={true}>Outflow</TableHeaderColumn>
-        <TableHeaderColumn dataField="Inflow" dataSort={true}>Inflow</TableHeaderColumn>
+        <TableHeaderColumn dataField="account" dataSort={true}>Account</TableHeaderColumn>
+        <TableHeaderColumn dataField="date" dataSort={true} dataFormat={this.dateFormat}>Date</TableHeaderColumn>
+        <TableHeaderColumn dataField="payee" dataSort={true}>Payee</TableHeaderColumn>
+        <TableHeaderColumn dataField="category" dataSort={true}>Category</TableHeaderColumn>
+        <TableHeaderColumn dataField="note">Note</TableHeaderColumn>
+        <TableHeaderColumn dataField="outflow" dataSort={true}>Outflow</TableHeaderColumn>
+        <TableHeaderColumn dataField="inflow" dataSort={true}>Inflow</TableHeaderColumn>
     </BootstrapTable>
 </div>
     );

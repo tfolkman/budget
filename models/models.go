@@ -14,15 +14,15 @@ type Budget struct {
 
 type Transactions struct {
 	ID       int
-	Account  string    `orm:"type(text)"`
-	Date     time.Time `orm:"typee(text)"`
-	Payee    string    `orm:"typ(date)"`
-	Category string    `orm:"typ(date)"`
-	Note     string    `orm:"typ(date)"`
-	Outflow  float64
-	Inflow   float64
-	Import   bool      `orm:"default(0)"`
-	Fitid 	 string    `orm:"type(text);null"`
-	Refnum 	 string    `orm:"type(text);null"`
+	Account  string    `orm:"type(text)" json:"account"`
+	Date     time.Time `orm:"type(date)" json:"date"`
+	Payee    string    `orm:"type(text)" json:"payee"`
+	Category string    `orm:"type(text)" json:"category"`
+	Note     string    `orm:"type(text)" json:"note"`
+	Outflow  float64   `json:"outflow"`
+	Inflow   float64   `json:"inflow"`
+	Import   bool      `orm:"default(0)" json:"import"`
+	Fitid 	 string    `orm:"type(text);null" json:"fitid"`
+	Refnum 	 string    `orm:"type(text);null" json:"refnum"`
 }
 

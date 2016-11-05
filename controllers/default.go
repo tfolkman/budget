@@ -7,9 +7,9 @@ import (
 	"github.com/tfolkman/budget/models"
 	"github.com/tfolkman/budget/converters"
 	"strconv"
-	"time"
 	"log"
 	"io/ioutil"
+	"fmt"
 )
 
 var budgetQuery string
@@ -285,26 +285,13 @@ func (c *MainController) GetImportData(){
 func (c *MainController) PostTransactions() {
 	reqBody := c.Ctx.Input.RequestBody
 	var imports []models.Transactions
-	json.Unmarshal(reqBody, &imports)
-	m := f.(map[string]interface{})
+	err := json.Unmarshal(reqBody, &imports)
+	if err != nil {
+        	fmt.Printf("There was an error decoding the json. err = %s", err)
+        	return
+    	}
 	o := orm.NewOrm()
-	for i := 0; i < int(m["nChildren"].(float64)) + 1; i++ {
-		log.Println(i)
-		transaction := new(models.Transactions)
-		iString := strconv.Itoa(i)
-		transaction.Account = m[iString].(map[string]interface{})["account"].(string)
-		transaction.Payee = m[iString].(map[string]interface{})["payee"].(string)
-		stringTime := m[iString].(map[string]interface{})["date"].(string)
-		t, _ := time.Parse("2006-01-02", stringTime)
-		transaction.Date = t
-		transaction.Category = m[iString].(map[string]interface{})["category"].(string)
-		transaction.Note = m[iString].(map[string]interface{})["note"].(string)
-		outflow, _ := strconv.ParseFloat(m[iString].(map[string]interface{})["outflow"].(string), 64)
-		inflow, _ := strconv.ParseFloat(m[iString].(map[string]interface{})["inflow"].(string), 64)
-		transaction.Outflow = outflow
-		transaction.Inflow = inflow
-		log.Println(o.Insert(transaction))
-	}
+	o.InsertMulti(len(imports), &imports)
 	returnValue := &mystruct{FieldOne: "test"}
 	c.Data["json"] = &returnValue
 	c.ServeJSON()

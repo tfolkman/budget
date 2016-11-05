@@ -10,7 +10,7 @@ var TransactionScreen = React.createClass({
 
   getInitialState: function() {
     return {data: [{'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
-      'outflow': '0', 'inflow': '0'}], accounts: [], payees: [], categories: []};
+      'outflow': 0, 'inflow': 0}], accounts: [], payees: [], categories: []};
   },
 
   componentDidMount: function() {
@@ -30,13 +30,11 @@ var TransactionScreen = React.createClass({
   addChild: function() {
     var newData = this.state.data;
     newData.push({'account': '', 'date': '', 'payee': '', 'category': '', 'note': '',
-      'outflow': '', 'inflow': ''});
+      'outflow': 0, 'inflow': 0});
     this.setState({data: newData});
   },
 
   catChange: function(event) {
-    console.log(event)
-    console.log(event.target)
     if (typeof event.labelKey != "undefined"){
       var split = event.labelKey.split("_")
       var value = event.valueKey;
@@ -51,11 +49,9 @@ var TransactionScreen = React.createClass({
     var type = split[0];
     var newData = this.state.data;
     if (type === 'account'){
-      console.log("account!!")
-      console.log(value)
       newData[index].account = value;
     } else if (type === 'date'){
-      newData[index].date = value;
+      newData[index].date = value + "T00:00:00.00Z";
     } else if (type === 'payee'){
       newData[index].payee = value;
     } else if (type === 'category'){
@@ -63,9 +59,9 @@ var TransactionScreen = React.createClass({
     } else if (type === 'note'){
       newData[index].note = value;
     } else if (type === 'outflow'){
-      newData[index].outflow = value;
+      newData[index].outflow = parseFloat(value);
     } else if (type === 'inflow'){
-      newData[index].inflow = value;
+      newData[index].inflow = parseFloat(value);
     }
     this.setState({data: newData});
   },
@@ -182,7 +178,7 @@ var Transaction = React.createClass({
       <div className="col-lg-2">
       <div className="form-group">
         <label>Date</label>
-        <input type="date" className="form-control" id={"date_"+this.props.reactKey} value={this.props.data.date} onChange={this.props.catChange} name={"date_"+this.props.reactKey}></input>
+        <input type="date" className="form-control" id={"date_"+this.props.reactKey} value={this.props.data.date.substring(0, 10)} onChange={this.props.catChange} name={"date_"+this.props.reactKey}></input>
       </div>      
       </div>
       <div className="col-lg-2">
