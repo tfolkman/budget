@@ -10,6 +10,21 @@ A simple budget application
 3. Run docker image: docker run -it -p 8080:8080 -v "$PWD/data":/go/src/github.com/tfolkman/budget/data budget
 4. Start budgeting: localhost:8080
 
+
+## Documentation
+
+![main page](./images/main_page.png)
+
+The main page (seen above) shows for a selected month the amount budgeted and spent for each category.
+
+To manual add transaction, go to the "Add Transactions" tab.
+
+To import data (QFX files only supported for now), go to the "Import Data" tab.
+
+To view or edit transactions, go to the "Edit Transactions tab".
+
+To view, add, or edit a monthly budget, go to the "Edit Budget" tab.
+
 ## Road Map
 
 1. Figure out way to sync to Dropbox
