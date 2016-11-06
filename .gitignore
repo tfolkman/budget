@@ -4,3 +4,4 @@ static/js
 data/*.db
 data/*.json
 data/*.qfx
+.idea/
