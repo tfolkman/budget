@@ -1,6 +1,5 @@
 budget
 node_modules/
-static/js
 data/*.db
 data/*.json
 data/*.qfx
