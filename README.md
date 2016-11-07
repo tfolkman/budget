@@ -11,9 +11,9 @@ A simple budget application
 4. In your budget folder run the following from the terminal: docker run -it -p 8080:8080 -v "$PWD/data":/go/src/github.com/tfolkman/budget/data tfolkman/budget
 5. Start budgeting: localhost:8080
 
-When done, type CTRL-C to end the process. Your transactions and budgets are stored in a sqlite database at ./data/budget.db.
+When done, type CTRL-C to end the process. Your transactions and budgets are stored in a sqlite database at ./data/budget.db. You can just copy this file to Dropbox to back it up.
 
-When you want to budget again, just go back to the directory and follow steps 3 and 4 above.
+When you want to budget again, just go back to the directory and follow steps 4 and 5 above.
 
 
 ## Documentation
