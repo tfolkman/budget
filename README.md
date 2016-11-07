@@ -6,9 +6,10 @@ A simple budget application
 ## Getting Started
 
 1. Have docker installed
-2. Build docker image:  docker build -t budget .
-3. Run docker image: docker run -it -p 8080:8080 -v "$PWD/data":/go/src/github.com/tfolkman/budget/data budget
-4. Start budgeting: localhost:8080
+2. Create new folder called budget (or whatever you want)
+3. Within this folder create a folder called "data"
+4. In your budget folder run the following from the terminal: docker run -it -p 8080:8080 -v "$PWD/data":/go/src/github.com/tfolkman/budget/data tfolkman/budget
+5. Start budgeting: localhost:8080
 
 When done, type CTRL-C to end the process. Your transactions and budgets are stored in a sqlite database at ./data/budget.db.
 
