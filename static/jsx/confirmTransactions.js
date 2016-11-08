@@ -178,7 +178,7 @@ var Transaction = React.createClass({
 
   render: function() {
     var key = this.props.reactKey;
-    var categoryValue = {value: this.props.data.Category, label: this.props.data.Category};
+    var categoryValue = {value: this.props.data.category, label: this.props.data.category};
     var categoryOptions = this.props.categories.map(function(X) {
       return {value: "category_" + key, label: X};
     });
@@ -189,13 +189,13 @@ var Transaction = React.createClass({
       <div className="col-lg-2">
       <div className="form-group">
         <label>Date</label>
-        <input type="date" className="form-control" id={"date_"+this.props.reactKey} value={this.props.data.Date.substring(0,10)} disabled name={"date_"+this.props.reactKey}></input>
+        <input type="date" className="form-control" id={"date_"+this.props.reactKey} value={this.props.data.date.substring(0,10)} disabled name={"date_"+this.props.reactKey}></input>
       </div>      
       </div>
       <div className="col-lg-2">
       <div className="form-group">
         <label>Payee</label>
-        <input type="text" className="form-control" id={"payee_"+this.props.reactKey} value={this.props.data.Payee} disabled name={"payee_"+this.props.reactKey}></input>
+        <input type="text" className="form-control" id={"payee_"+this.props.reactKey} value={this.props.data.payee} disabled name={"payee_"+this.props.reactKey}></input>
       </div>
       </div>
       <div className="col-lg-2">
@@ -208,13 +208,13 @@ var Transaction = React.createClass({
       <div className="col-lg-2">
       <div className="form-group">
         <label>Outflow</label>
-        <input type="number" className="form-control" id={"outflow_"+this.props.reactKey} value={this.props.data.Outflow} disabled name={"outflow_"+this.props.reactKey}></input>
+        <input type="number" className="form-control" id={"outflow_"+this.props.reactKey} value={this.props.data.outflow} disabled name={"outflow_"+this.props.reactKey}></input>
       </div>
       </div>
       <div className="col-lg-2">
       <div className="form-group">
         <label>Inflow</label>
-        <input type="number" className="form-control" id={"inflow_"+this.props.reactKey} value={this.props.data.Inflow} disabled name={"inflow_"+this.props.reactKey}></input>
+        <input type="number" className="form-control" id={"inflow_"+this.props.reactKey} value={this.props.data.inflow} disabled name={"inflow_"+this.props.reactKey}></input>
       </div>
       </div>
       <div className="col-lg-1">

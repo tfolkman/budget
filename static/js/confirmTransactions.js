@@ -35681,7 +35681,7 @@ var Transaction = React.createClass({
 
   render: function render() {
     var key = this.props.reactKey;
-    var categoryValue = { value: this.props.data.Category, label: this.props.data.Category };
+    var categoryValue = { value: this.props.data.category, label: this.props.data.category };
     var categoryOptions = this.props.categories.map(function (X) {
       return { value: "category_" + key, label: X };
     });
@@ -35703,7 +35703,7 @@ var Transaction = React.createClass({
               null,
               'Date'
             ),
-            React.createElement('input', { type: 'date', className: 'form-control', id: "date_" + this.props.reactKey, value: this.props.data.Date.substring(0, 10), disabled: true, name: "date_" + this.props.reactKey })
+            React.createElement('input', { type: 'date', className: 'form-control', id: "date_" + this.props.reactKey, value: this.props.data.date.substring(0, 10), disabled: true, name: "date_" + this.props.reactKey })
           )
         ),
         React.createElement(
@@ -35717,7 +35717,7 @@ var Transaction = React.createClass({
               null,
               'Payee'
             ),
-            React.createElement('input', { type: 'text', className: 'form-control', id: "payee_" + this.props.reactKey, value: this.props.data.Payee, disabled: true, name: "payee_" + this.props.reactKey })
+            React.createElement('input', { type: 'text', className: 'form-control', id: "payee_" + this.props.reactKey, value: this.props.data.payee, disabled: true, name: "payee_" + this.props.reactKey })
           )
         ),
         React.createElement(
@@ -35746,7 +35746,7 @@ var Transaction = React.createClass({
               null,
               'Outflow'
             ),
-            React.createElement('input', { type: 'number', className: 'form-control', id: "outflow_" + this.props.reactKey, value: this.props.data.Outflow, disabled: true, name: "outflow_" + this.props.reactKey })
+            React.createElement('input', { type: 'number', className: 'form-control', id: "outflow_" + this.props.reactKey, value: this.props.data.outflow, disabled: true, name: "outflow_" + this.props.reactKey })
           )
         ),
         React.createElement(
@@ -35760,7 +35760,7 @@ var Transaction = React.createClass({
               null,
               'Inflow'
             ),
-            React.createElement('input', { type: 'number', className: 'form-control', id: "inflow_" + this.props.reactKey, value: this.props.data.Inflow, disabled: true, name: "inflow_" + this.props.reactKey })
+            React.createElement('input', { type: 'number', className: 'form-control', id: "inflow_" + this.props.reactKey, value: this.props.data.inflow, disabled: true, name: "inflow_" + this.props.reactKey })
           )
         ),
         React.createElement(

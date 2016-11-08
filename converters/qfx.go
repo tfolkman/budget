@@ -83,6 +83,7 @@ func ReadQfx(fileName string, dedup string) []models.Transactions {
 				transaction.Payee = payee
 				transaction.Refnum = refnum
 				transaction.Fitid = fitid
+				log.Println(transaction)
 				if dedup == "true"{
 					cnt, _ = o.QueryTable("transactions").Filter("fitid", fitid).
 					Filter("payee", payee).Filter("outflow", outflow).
