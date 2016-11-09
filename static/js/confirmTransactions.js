@@ -35532,8 +35532,6 @@ var TransactionScreen = React.createClass({
   },
 
   catChange: function catChange(event) {
-    console.log(event);
-    console.log(event.target);
     if (typeof event.labelKey != "undefined") {
       var split = event.labelKey.split("_");
       var value = event.valueKey;
@@ -35548,12 +35546,10 @@ var TransactionScreen = React.createClass({
     var type = split[0];
     var newData = this.state.data;
     if (type === 'account') {
-      console.log("account!!");
-      console.log(value);
       this.setState({ account: value });
     } else if (type === 'category') {
       var data = this.state.data;
-      data[index].Category = value;
+      data[index].category = value;
       this.setState({ data: data });
     }
   },
@@ -35561,7 +35557,6 @@ var TransactionScreen = React.createClass({
   deleteChild: function deleteChild(event) {
     var index = event.target.id.split("_")[1];
     var locIndex = event.target.id.split("_")[2];
-    console.log(index);
     var newData = this.state.data;
     delete newData[locIndex];
     this.setState({ data: newData,
