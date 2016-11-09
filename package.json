@@ -1,6 +1,7 @@
 {
   "name": "budget",
   "version": "1.0.0",
+  "private": true,
   "babel": {
     "presets": [
       "react"
@@ -28,7 +29,7 @@
     "url": "git+https://github.com/tfolkman/budget.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "APACHE-2.0",
   "bugs": {
     "url": "https://github.com/tfolkman/budget/issues"
   },
