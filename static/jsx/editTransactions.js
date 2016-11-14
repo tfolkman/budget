@@ -79,6 +79,8 @@ var MainPage = React.createClass({
   },
 
   cellEdit: function(row, cellName, cellValue){
+   row["inflow"] = parseFloat(row.inflow);
+   row["outflow"] = parseFloat(row.outflow);
    jQuery.ajax({
     url: "/update_transaction",
     type: 'POST',
