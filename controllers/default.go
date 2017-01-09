@@ -2,14 +2,15 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"github.com/tfolkman/budget/models"
 	"github.com/tfolkman/budget/converters"
-	"strconv"
-	"log"
+	"github.com/tfolkman/budget/models"
 	"io/ioutil"
-	"fmt"
+	"log"
+	"strconv"
+	"strings"
 )
 
 var budgetQuery string
@@ -24,23 +25,23 @@ type MainController struct {
 }
 
 type Category struct {
-	Category string `orm:"type(text)"`
-	Budgeted float64
-	Spent float64
+	Category  string `orm:"type(text)"`
+	Budgeted  float64
+	Spent     float64
 	Remaining float64
 }
 
 type NewBudget struct {
-	Year string `json:"year"`
-	Month string `json:"month"`
-	Base bool `json:"base"`
-	BaseYear string `json:"baseYear"`
+	Year      string `json:"year"`
+	Month     string `json:"month"`
+	Base      bool   `json:"base"`
+	BaseYear  string `json:"baseYear"`
 	BaseMonth string `json:"baseMonth"`
 }
 
 type Imports struct {
-	Data []models.Transactions `json:"data"`
-	Account string `json:"account`
+	Data    []models.Transactions `json:"data"`
+	Account string                `json:"account`
 }
 
 func (c *MainController) Get() {
@@ -51,7 +52,7 @@ func (c *MainController) EditBudget() {
 	c.TplName = "editbudget.tpl"
 }
 
-func (c *MainController) ImportData(){
+func (c *MainController) ImportData() {
 	c.TplName = "importData.tpl"
 }
 
@@ -79,13 +80,13 @@ func (c *MainController) ConfirmImport() {
 	o := orm.NewOrm()
 	log.Println("confirm import...")
 	dedup := c.GetString("dedup")
-    	c.SaveToFile("importData", "./data/import.qfx")
+	c.SaveToFile("importData", "./data/import.qfx")
 	importedTransactions := converters.ReadQfx("./data/import.qfx", dedup)
 	o.InsertMulti(len(importedTransactions), &importedTransactions)
 	c.TplName = "confirmImport.tpl"
 }
 
-func (c *MainController) GetTransactions(){
+func (c *MainController) GetTransactions() {
 	var month string
 	var year string
 	c.Ctx.Input.Bind(&month, "month")
@@ -98,7 +99,7 @@ func (c *MainController) GetTransactions(){
 	c.ServeJSON()
 }
 
-func (c *MainController) PostImports(){
+func (c *MainController) PostImports() {
 	o := orm.NewOrm()
 	var imports Imports
 	reqBody := c.Ctx.Input.RequestBody
@@ -113,7 +114,7 @@ func (c *MainController) PostImports(){
 	c.ServeJSON()
 }
 
-func (c *MainController) PostNewBudget(){
+func (c *MainController) PostNewBudget() {
 	o := orm.NewOrm()
 	var budgets []models.Budget
 	reqBody := c.Ctx.Input.RequestBody
@@ -147,7 +148,6 @@ func (c *MainController) PostNewBudget(){
 	c.ServeJSON()
 }
 
-
 func (c *MainController) GetUniques() {
 	o := orm.NewOrm()
 	var m map[string]interface{}
@@ -158,6 +158,9 @@ func (c *MainController) GetUniques() {
 	var months orm.ParamsList
 	var budget_months orm.ParamsList
 	var years orm.ParamsList
+	var max_trans_year orm.ParamsList
+	var max_trans_month orm.ParamsList
+	var max_budget orm.ParamsList
 	var budget_years orm.ParamsList
 	_, _ = o.Raw("select distinct account from transactions;").ValuesFlat(&accounts)
 	_, _ = o.Raw("select distinct payee from transactions;").ValuesFlat(&payees)
@@ -166,6 +169,13 @@ func (c *MainController) GetUniques() {
 	_, _ = o.Raw("select distinct year from budget;").ValuesFlat(&budget_years)
 	_, _ = o.Raw("select distinct strftime('%m', date) as month from transactions order by month;").ValuesFlat(&months)
 	_, _ = o.Raw("select distinct strftime('%Y', date) as year from transactions order by year;").ValuesFlat(&years)
+	_, _ = o.Raw("select strftime('%Y', max(date)) as year from transactions;").ValuesFlat(&max_trans_year)
+	_, _ = o.Raw("select strftime('%m', max(date)) as year from transactions;").ValuesFlat(&max_trans_month)
+	_, _ = o.Raw("select max(year || '-' || month || '-' || 1) from budget;").ValuesFlat(&max_budget)
+
+	max_budget_splits := strings.Split(max_budget[0].(string), "-")
+	max_budget_month := max_budget_splits[1]
+
 	if accounts == nil {
 		m["accounts"] = [1]string{"Visa"}
 	} else {
@@ -181,8 +191,12 @@ func (c *MainController) GetUniques() {
 	m["budget_months"] = budget_months
 	m["years"] = years
 	m["budget_years"] = budget_years
+	m["max_trans_year"] = max_trans_year[0]
+	m["max_trans_month"] = max_trans_month[0]
+	m["max_budget_year"] = max_budget_splits[0]
+	m["max_budget_month"] = max_budget_month
 	c.Data["json"] = &m
-	c.ServeJSON();
+	c.ServeJSON()
 }
 
 func (c *MainController) UpdateTransaction() {
@@ -268,13 +282,13 @@ func (c *MainController) GetBudget() {
 	var budgets []models.Budget
 	num, err := o.QueryTable("budget").Filter("month", month).Filter("year", year).All(&budgets)
 	if err == nil {
-    		log.Println("user nums: ", num)
+		log.Println("user nums: ", num)
 	}
 	c.Data["json"] = &budgets
 	c.ServeJSON()
 }
 
-func (c *MainController) GetImportData(){
+func (c *MainController) GetImportData() {
 	o := orm.NewOrm()
 	var imports []models.Transactions
 	_, _ = o.QueryTable("transactions").Filter("import", true).All(&imports)
@@ -287,13 +301,12 @@ func (c *MainController) PostTransactions() {
 	var imports []models.Transactions
 	err := json.Unmarshal(reqBody, &imports)
 	if err != nil {
-        	fmt.Printf("There was an error decoding the json. err = %s", err)
-        	return
-    	}
+		fmt.Printf("There was an error decoding the json. err = %s", err)
+		return
+	}
 	o := orm.NewOrm()
 	o.InsertMulti(len(imports), &imports)
 	returnValue := &mystruct{FieldOne: "test"}
 	c.Data["json"] = &returnValue
 	c.ServeJSON()
 }
-

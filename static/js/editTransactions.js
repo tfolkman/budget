@@ -59456,13 +59456,11 @@ var MainPage = React.createClass({
 
   getDates: function getDates() {
     return jQuery.get(this.props.uniqueSource, function (result) {
-      var monthSelected = result.months[result.months.length - 1];
-      var yearSelected = result.years[result.years.length - 1];
       this.setState({
         years: result.years,
         months: result.months,
-        monthSelected: monthSelected,
-        yearSelected: yearSelected
+        monthSelected: result.max_trans_month,
+        yearSelected: result.max_trans_year
       });
     }.bind(this));
   },
@@ -59471,9 +59469,11 @@ var MainPage = React.createClass({
     console.log(this.state.monthSelected);
     var tranUrl = this.props.transactionSource + "?month=" + this.state.monthSelected + "&year=" + this.state.yearSelected;
     this.serverRequest = jQuery.get(tranUrl, function (result) {
-      this.setState({
-        transactions: result
-      });
+      if (result != null) {
+        this.setState({
+          transactions: result
+        });
+      }
     }.bind(this));
   },
 

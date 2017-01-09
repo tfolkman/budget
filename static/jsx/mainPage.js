@@ -39,13 +39,11 @@ var MainPage = React.createClass({
 
   getDates: function(){
     return jQuery.get(this.props.uniqueSource, function (result) {
-      var monthSelected = Math.max.apply(Math, result.budget_months);
-      var yearSelected = Math.max.apply(Math, result.budget_years);
       this.setState({
         years: result.budget_years.sort(this.sortNumber),
         months: result.budget_months.sort(this.sortNumber),
-        monthSelected: monthSelected,
-        yearSelected: yearSelected,
+        monthSelected: result.max_budget_month,
+        yearSelected: result.max_budget_year,
       });
     }.bind(this));
   },
@@ -56,9 +54,11 @@ var MainPage = React.createClass({
     var tranUrl = this.props.transactionSource+"?month="+this.state.monthSelected+"&year="+this.state.yearSelected
     console.log(tranUrl)
     this.serverRequest = jQuery.get(tranUrl, function (result) {
-      this.setState({
-        budgetData: result,
-      });
+      if (result != null){
+        this.setState({
+          budgetData: result,
+        });
+      }
     }.bind(this));
   },
 
